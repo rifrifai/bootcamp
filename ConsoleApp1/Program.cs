@@ -1,31 +1,29 @@
 ﻿// See https://aka.ms/new-console-template for more information
-// Tugas
-Console.Write("Enter a number: ");
-string input = Console.ReadLine();
-if (int.TryParse(input, out int n) && n > 0)
+// Task 1
+Console.Write("Masukkan no : ");
+string answer = Console.ReadLine();
+if (int.TryParse(answer, out int num) && num > 0)
 {
-  for (int x = 1; x <= n; x++)
+  for (int i = 1; i <= num; i++)
   {
-    if (x % 3 == 0 && x % 5 == 0)
+    if (i % 3 == 0 && i % 5 == 0)
     {
       Console.Write("foobar");
     }
-    else if (x % 3 == 0)
+    else if (i % 3 == 0)
     {
       Console.Write("foo");
     }
-    else if (x % 5 == 0)
+    else if (i % 5 == 0)
     {
       Console.Write("bar");
     }
     else
     {
-      Console.Write(x);
+      Console.Write(i);
     }
-    // tambah comma
-    if (x < n) { Console.Write(","); }
+    if (i < num) Console.Write(",");
   }
-  Console.WriteLine();
 }
 else
 {
