@@ -27,3 +27,7 @@ Console.WriteLine(num == int.MaxValue);
 int num2 = int.MaxValue;
 num2++;
 Console.WriteLine(num2 == int.MinValue);
+
+int num3 = 1000000;
+int num4 = 1000000;
+Console.WriteLine(checked(num3 * num4));
