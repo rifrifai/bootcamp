@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 // Task 1
 Console.Write("Masukkan no : ");
-string answer = Console.ReadLine();
+string? answer = Console.ReadLine();
 if (int.TryParse(answer, out int num) && num > 0)
 {
   for (int i = 1; i <= num; i++)
