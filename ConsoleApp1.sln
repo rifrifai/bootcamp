@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D-Inheritance-ParentChildCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "F-SolutionParentChildConstructor", "Day-3\F-SolutionParentChildConstructor\F-SolutionParentChildConstructor.csproj", "{B7360F87-D823-4240-910A-A0809DD18087}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G-Inheritance-ErrorMultipleInheritance", "Day-3\G-Inheritance-ErrorMultipleInheritance\G-Inheritance-ErrorMultipleInheritance.csproj", "{D833673D-5B44-40AF-AADA-1799D12870A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -309,6 +311,18 @@ Global
 		{B7360F87-D823-4240-910A-A0809DD18087}.Release|x64.Build.0 = Release|Any CPU
 		{B7360F87-D823-4240-910A-A0809DD18087}.Release|x86.ActiveCfg = Release|Any CPU
 		{B7360F87-D823-4240-910A-A0809DD18087}.Release|x86.Build.0 = Release|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Debug|x64.Build.0 = Debug|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Debug|x86.Build.0 = Debug|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Release|x64.ActiveCfg = Release|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Release|x64.Build.0 = Release|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Release|x86.ActiveCfg = Release|Any CPU
+		{D833673D-5B44-40AF-AADA-1799D12870A8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -333,5 +347,6 @@ Global
 		{2571E267-E42A-4039-BD83-842480205483} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
 		{975F8DA6-4C35-482C-BACD-F95B562F9CE3} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
 		{B7360F87-D823-4240-910A-A0809DD18087} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
+		{D833673D-5B44-40AF-AADA-1799D12870A8} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
 	EndGlobalSection
 EndGlobal
