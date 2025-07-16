@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G-Inheritance-ErrorMultiple
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H-Inheritance-GrandParentAnalogy", "Day-3\H-Inheritance-GrandParentAnalogy\H-Inheritance-GrandParentAnalogy.csproj", "{0D97CDC8-6643-48B9-8DCE-4A97F28013FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I-InheritanceComposition", "Day-3\I-InheritanceComposition\I-InheritanceComposition.csproj", "{4EEC7F60-0263-4994-AD3C-B5794D727AB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -337,6 +339,18 @@ Global
 		{0D97CDC8-6643-48B9-8DCE-4A97F28013FC}.Release|x64.Build.0 = Release|Any CPU
 		{0D97CDC8-6643-48B9-8DCE-4A97F28013FC}.Release|x86.ActiveCfg = Release|Any CPU
 		{0D97CDC8-6643-48B9-8DCE-4A97F28013FC}.Release|x86.Build.0 = Release|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Debug|x64.Build.0 = Debug|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Debug|x86.Build.0 = Debug|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Release|x64.ActiveCfg = Release|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Release|x64.Build.0 = Release|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Release|x86.ActiveCfg = Release|Any CPU
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -363,5 +377,6 @@ Global
 		{B7360F87-D823-4240-910A-A0809DD18087} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
 		{D833673D-5B44-40AF-AADA-1799D12870A8} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
 		{0D97CDC8-6643-48B9-8DCE-4A97F28013FC} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
+		{4EEC7F60-0263-4994-AD3C-B5794D727AB0} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
 	EndGlobalSection
 EndGlobal
