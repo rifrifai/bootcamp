@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Class", "Day-3\Class\Class.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Class-Parameter", "Day-3\Class-Parameter\Class-Parameter.csproj", "{BA799F2D-A7AC-4604-97CE-79F4330933F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Class-Structure", "Day-3\Class-Structure\Class-Structure.csproj", "{B05F843C-F277-4740-92E5-827153A0C42C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,18 @@ Global
 		{BA799F2D-A7AC-4604-97CE-79F4330933F8}.Release|x64.Build.0 = Release|Any CPU
 		{BA799F2D-A7AC-4604-97CE-79F4330933F8}.Release|x86.ActiveCfg = Release|Any CPU
 		{BA799F2D-A7AC-4604-97CE-79F4330933F8}.Release|x86.Build.0 = Release|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Debug|x64.Build.0 = Debug|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Debug|x86.Build.0 = Debug|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Release|x64.ActiveCfg = Release|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Release|x64.Build.0 = Release|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Release|x86.ActiveCfg = Release|Any CPU
+		{B05F843C-F277-4740-92E5-827153A0C42C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,5 +92,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F37CFB61-94C1-4953-AC76-17260F61D461} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
 		{BA799F2D-A7AC-4604-97CE-79F4330933F8} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
+		{B05F843C-F277-4740-92E5-827153A0C42C} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
 	EndGlobalSection
 EndGlobal
