@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Custom-Constructor", "Day-3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Constructor-Overloading", "Day-3\Constructor-Overloading\Constructor-Overloading.csproj", "{857A98FD-7DE4-4372-8402-BB284326B552}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Composition", "Day-3\Composition\Composition.csproj", "{1966DE3A-CC38-4C29-A0FC-F612C243DD94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,18 @@ Global
 		{857A98FD-7DE4-4372-8402-BB284326B552}.Release|x64.Build.0 = Release|Any CPU
 		{857A98FD-7DE4-4372-8402-BB284326B552}.Release|x86.ActiveCfg = Release|Any CPU
 		{857A98FD-7DE4-4372-8402-BB284326B552}.Release|x86.Build.0 = Release|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Debug|x64.Build.0 = Debug|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Debug|x86.Build.0 = Debug|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Release|x64.ActiveCfg = Release|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Release|x64.Build.0 = Release|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Release|x86.ActiveCfg = Release|Any CPU
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -153,5 +167,6 @@ Global
 		{2BD3FE4E-BEA3-40C0-9C85-EE85526429C7} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
 		{05590C7B-02C8-4241-975B-85170D75DD6B} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
 		{857A98FD-7DE4-4372-8402-BB284326B552} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
+		{1966DE3A-CC38-4C29-A0FC-F612C243DD94} = {EB8F5703-7212-4A4A-B8C8-D5D8E5A0B36E}
 	EndGlobalSection
 EndGlobal
