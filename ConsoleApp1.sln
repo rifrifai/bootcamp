@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D-Encapsulation-PrivateNami
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Encapsulation-QuestionError", "Day-4\E-Encapsulation-QuestionError\E-Encapsulation-QuestionError.csproj", "{18F4E3EA-66BF-4600-84D3-11E049C8595F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "F-Encapsulation-Variable", "Day-4\F-Encapsulation-Variable\F-Encapsulation-Variable.csproj", "{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -423,6 +425,18 @@ Global
 		{18F4E3EA-66BF-4600-84D3-11E049C8595F}.Release|x64.Build.0 = Release|Any CPU
 		{18F4E3EA-66BF-4600-84D3-11E049C8595F}.Release|x86.ActiveCfg = Release|Any CPU
 		{18F4E3EA-66BF-4600-84D3-11E049C8595F}.Release|x86.Build.0 = Release|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Debug|x64.Build.0 = Debug|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Debug|x86.Build.0 = Debug|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Release|x64.ActiveCfg = Release|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Release|x64.Build.0 = Release|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Release|x86.ActiveCfg = Release|Any CPU
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -455,5 +469,6 @@ Global
 		{4D69F8F4-41B4-488A-9AA7-F77C0DF367D4} = {93AFEC08-7229-4BBF-A033-AF7FFB52E926}
 		{453A08FD-9B60-4C95-B51D-B0DE2CA9A61B} = {93AFEC08-7229-4BBF-A033-AF7FFB52E926}
 		{18F4E3EA-66BF-4600-84D3-11E049C8595F} = {93AFEC08-7229-4BBF-A033-AF7FFB52E926}
+		{39AF72DC-C091-4CC4-9DA1-5A0BA27C2829} = {93AFEC08-7229-4BBF-A033-AF7FFB52E926}
 	EndGlobalSection
 EndGlobal
