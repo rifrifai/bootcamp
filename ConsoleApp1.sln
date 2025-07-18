@@ -85,6 +85,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arrays", "Practice\C#-Langu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boolean-Types-and-Operators", "Practice\C#-Language-Basics\Boolean-Types-and-Operators\Boolean-Types-and-Operators.csproj", "{89E1F25A-F264-4A46-8492-825A6AEA52D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expressions-and-Operators", "Practice\C#-Language-Basics\Expressions-and-Operators\Expressions-and-Operators.csproj", "{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -515,6 +517,18 @@ Global
 		{89E1F25A-F264-4A46-8492-825A6AEA52D4}.Release|x64.Build.0 = Release|Any CPU
 		{89E1F25A-F264-4A46-8492-825A6AEA52D4}.Release|x86.ActiveCfg = Release|Any CPU
 		{89E1F25A-F264-4A46-8492-825A6AEA52D4}.Release|x86.Build.0 = Release|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Debug|x64.Build.0 = Debug|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Debug|x86.Build.0 = Debug|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Release|x64.Build.0 = Release|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -556,5 +570,6 @@ Global
 		{E4CA708A-A13D-4308-A3DC-1407B4C0D2F3} = {F03061C2-8EFA-47B6-8F11-904E6EC64631}
 		{11760626-8BDD-4B89-B749-8E569ADAFB54} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
 		{89E1F25A-F264-4A46-8492-825A6AEA52D4} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
+		{FC19D501-5A8A-417E-8CE0-BCB62A0AF90F} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
 	EndGlobalSection
 EndGlobal
