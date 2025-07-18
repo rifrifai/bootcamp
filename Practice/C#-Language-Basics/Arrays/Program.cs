@@ -78,6 +78,21 @@ namespace ArraysDemo
         fibonacci[i] = fibonacci[i - 1] + fibonacci[i - 2];
       }
       Console.WriteLine($"Fibonacci sequence: {string.Join(", ", fibonacci)}");
+
+      // Array.Fill for identical values
+      // perfect for initialization scenarios
+      int[] scores = new int[5];
+      Array.Fill(scores, 100);    //set all elements to 100
+      Console.WriteLine($"All perfect scores: {string.Join(", ", scores)}");
+
+      // menggunakan loop untuk inisialisasi berbasis pola/ pattern-based
+      double[] powers = new double[8];
+      for (int i = 0; i < powers.Length; i++)
+      {
+        powers[i] = Math.Pow(2, i);
+      }
+      Console.WriteLine($"Power of 2: {string.Join(", ", powers)}");
+      Console.WriteLine();
     }
 
   }
