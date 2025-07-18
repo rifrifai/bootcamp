@@ -68,7 +68,26 @@ namespace EventHandlerDemo
       var eventPublisher = new EventPublisher();
       var delegatePublisher = new DelegatePublisher();
 
+      eventPublisher.SafeNotification += msg => Console.WriteLine($"  Event received: {msg}");
+      delegatePublisher.UnsafeNotification += msg => Console.WriteLine($"  Delegate received: {msg}");
 
+      Console.WriteLine("Both subscribed successfully");
+
+      eventPublisher.TriggerEvent("Hello from event");
+      delegatePublisher.TriggerEvent("Hello from delegate");
+
+      Console.WriteLine("\nTesting safety differences: ");
+
+      // try to do dangerous things - these will show the difference
+      //eventPublisher.SafeNotification = null;     //compile error - can't assign to event
+      // eventPublisher.SafeNotification("hack");      //compile error - can't invoke from outside
+
+      // but with delegate, these dangerous operations are possible:
+      Console.WriteLine("Delegate allows dangerous operations: ");
+      delegatePublisher.UnsafeNotification = null;    //wipes out all subscribers!
+      delegatePublisher.TriggerEvent("This won't be received by anyone");
+
+      Console.WriteLine("Event safety prevents subscriber interference\n");
     }
     public class EventPublisher
     {
@@ -82,7 +101,7 @@ namespace EventHandlerDemo
     public class DelegatePublisher
     {
       public Action<string>? UnsafeNotification;
-      public void TraggerEvent(string message)
+      public void TriggerEvent(string message)
       {
         Console.WriteLine($"Event publisher sending: {message}");
         UnsafeNotification?.Invoke(message);
