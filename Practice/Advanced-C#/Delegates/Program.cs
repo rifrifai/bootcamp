@@ -12,6 +12,8 @@ namespace DelegatesDemo
       // run all delegate demonstration
       BasicDelegateDemo();
       PluginMethodsDemo();
+      InstanceAndStaticMethodTargetsDemo();
+      MulticastDelegatesDemo();
     }
     delegate int Transformer(int x);
     static void BasicDelegateDemo()
@@ -60,6 +62,90 @@ namespace DelegatesDemo
       for (int i = 0; i < values.Length; i++)
       {
         values[i] = t(values[i]);
+      }
+    }
+
+    static void InstanceAndStaticMethodTargetsDemo()
+    {
+      Console.WriteLine("3. Instance and Static Method Targets");
+      Console.WriteLine("=====================================");
+
+      Console.WriteLine("Static method delegation: ");
+      Transformer staticDelegate = Square;
+      Console.WriteLine($"Static Square of 4 : {staticDelegate(4)}");
+
+      Console.WriteLine("\nInstance method delegation: ");
+      Calculator calculator = new(5);
+      Transformer instanceDelegate = calculator.MultipliBy;
+
+      Console.WriteLine($"Multiply 8 by {calculator.Multiplier}: {instanceDelegate(8)}");
+      Console.WriteLine($"Delegate target is null (static): {staticDelegate.Target == null}");
+      Console.WriteLine($"Delegate target is Calculator instance: {instanceDelegate.Target is Calculator}");
+
+      Calculator calculator2 = new(3);
+      Transformer instanceDelegate2 = calculator2.MultipliBy;
+
+      Console.WriteLine($"Different instance - multiply 8 by {calculator2.Multiplier}: {instanceDelegate2(8)}");
+      Console.WriteLine();
+    }
+    public class Calculator
+    {
+      private int _multiplier;
+      public Calculator(int multiplier)
+      {
+        this._multiplier = multiplier;
+      }
+      public int Multiplier => _multiplier;
+      public int MultipliBy(int input)
+      {
+        return input * _multiplier;
+      }
+
+    }
+    delegate void ProgressReporter(int percentComplete);
+
+    static void MulticastDelegatesDemo()
+    {
+      Console.WriteLine("4. Multiple Delegates - Combining Multiple Methods");
+      Console.WriteLine("==================================================");
+
+      ProgressReporter reporter = WriteProgressToConsole;
+      reporter += WriteProgressToFile;
+      reporter += SendProgressAlert;
+
+      Console.WriteLine("Progress reporting with multicast delegate (3 methods):");
+      reporter(76);
+
+      Console.WriteLine("\nRemoving console reporter using -= operator:");
+      reporter -= WriteProgressToConsole;
+
+      Console.WriteLine("Progress reporting after removal (2 methods): ");
+      if (reporter != null)
+      {
+        reporter(80);
+      }
+
+      Console.WriteLine("\nMulticast with return values (only last one is kept): ");
+      Transformer multiTransformer = Square;
+      multiTransformer += Cube;
+
+      int lastResult = multiTransformer(3);
+      Console.WriteLine($"Only last result is returned: {lastResult}");
+      Console.WriteLine();
+    }
+    static void WriteProgressToConsole(int percentComplete)
+    {
+      Console.WriteLine($"  Console Log: {percentComplete}% complete");
+    }
+    static void WriteProgressToFile(int percentComplete)
+    {
+      Console.WriteLine($"  File Log: {percentComplete}% complete");
+    }
+    static void SendProgressAlert(int percentComplete)
+    {
+      if (percentComplete >= 80)
+      {
+        Console.WriteLine($"  Alert: High progress reached - {percentComplete}%");
       }
     }
   }
