@@ -107,5 +107,11 @@ namespace EventHandlerDemo
         UnsafeNotification?.Invoke(message);
       }
     }
+
+    static void StandardEventPatternDemo()
+    {
+      Console.WriteLine("3. Standard Event Pattern - Proper .Net Convention");
+      Console.WriteLine("==================================================");
+    }
   }
 }
