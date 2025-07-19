@@ -113,6 +113,7 @@ namespace Statements
       // innerVariable is no longer accessible here
       Console.WriteLine("Inner variable is no longer accessible outside its block");
       Console.WriteLine("This demonstrates block-level scoping in C#\n");
+
     }
   }
 }
