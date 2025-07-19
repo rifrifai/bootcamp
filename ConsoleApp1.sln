@@ -93,6 +93,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Null-Operators", "Practice\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statements", "Practice\C#-Language-Basics\Statements\Statements.csproj", "{AC679C3F-6E5B-4061-9C1A-1FA70725FFF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strings-and-Characters", "Practice\C#-Language-Basics\Strings-and-Characters\Strings-and-Characters.csproj", "{69A773FA-6DDB-4212-BD88-CDE7D059D047}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -571,6 +573,18 @@ Global
 		{AC679C3F-6E5B-4061-9C1A-1FA70725FFF8}.Release|x64.Build.0 = Release|Any CPU
 		{AC679C3F-6E5B-4061-9C1A-1FA70725FFF8}.Release|x86.ActiveCfg = Release|Any CPU
 		{AC679C3F-6E5B-4061-9C1A-1FA70725FFF8}.Release|x86.Build.0 = Release|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Debug|x64.Build.0 = Debug|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Debug|x86.Build.0 = Debug|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Release|x64.ActiveCfg = Release|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Release|x64.Build.0 = Release|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Release|x86.ActiveCfg = Release|Any CPU
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -616,5 +630,6 @@ Global
 		{F9C87946-BEB9-41E9-9EFD-202B30FE959E} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
 		{958D97D1-E16B-46B3-A220-C1D222A9B82C} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
 		{AC679C3F-6E5B-4061-9C1A-1FA70725FFF8} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
+		{69A773FA-6DDB-4212-BD88-CDE7D059D047} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
 	EndGlobalSection
 EndGlobal
