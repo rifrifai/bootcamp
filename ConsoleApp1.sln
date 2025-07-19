@@ -99,6 +99,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syntax", "Practice\C#-Langu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Type-Basics", "Practice\C#-Language-Basics\Type-Basics\Type-Basics.csproj", "{2D8CA5F9-6A33-4B9E-A0E2-68C15A982765}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Variables-and-Parameters", "Practice\C#-Language-Basics\Variables-and-Parameters\Variables-and-Parameters.csproj", "{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -613,6 +615,18 @@ Global
 		{2D8CA5F9-6A33-4B9E-A0E2-68C15A982765}.Release|x64.Build.0 = Release|Any CPU
 		{2D8CA5F9-6A33-4B9E-A0E2-68C15A982765}.Release|x86.ActiveCfg = Release|Any CPU
 		{2D8CA5F9-6A33-4B9E-A0E2-68C15A982765}.Release|x86.Build.0 = Release|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Debug|x64.Build.0 = Debug|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Debug|x86.Build.0 = Debug|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Release|x64.ActiveCfg = Release|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Release|x64.Build.0 = Release|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Release|x86.ActiveCfg = Release|Any CPU
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -661,5 +675,6 @@ Global
 		{69A773FA-6DDB-4212-BD88-CDE7D059D047} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
 		{63F4095C-3666-4A64-882B-E950B503D0B1} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
 		{2D8CA5F9-6A33-4B9E-A0E2-68C15A982765} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
+		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
 	EndGlobalSection
 EndGlobal
