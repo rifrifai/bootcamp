@@ -33,7 +33,7 @@ namespace VariablesAndParameters
   {
     // Static field to demonstrate ref returns
     // In production code, be careful with global state like this
-    private static string globalMessage = "Initial Global Value";
+    // private static string globalMessage = "Initial Global Value";
     static void Main(string[] args)
     {
       Console.WriteLine("=== VARIABLES AND PARAMETERS IN C# ===");
@@ -47,6 +47,9 @@ namespace VariablesAndParameters
 
       // Section 3: Default Values
       DefaultValues();
+
+      // Section 4: Parameters Passing
+      ParameterPassing();
 
     }
 
@@ -171,6 +174,94 @@ namespace VariablesAndParameters
 
       Console.WriteLine("\nRemember: Default values are predictable and safe - use them to your advantage!\n");
     }
+
+    static void ParameterPassing()
+    {
+      Console.WriteLine("=== PARAMETER PASSING MODES ===");
+      Console.WriteLine("Master these concepts and you'll write more efficient, predictable code\n");
+
+      // Pass by value (default behavior)
+      Console.WriteLine("--- Pass by Value (Default) ---");
+      int originalValue = 10;
+      Console.WriteLine($"Before calling ModifyByValue: originalValue = {originalValue}");
+      ModifyByValue(originalValue);
+      Console.WriteLine($"After calling ModifyByValue: originalValue = {originalValue}");
+      Console.WriteLine("Value unchanged - method worked with a copy\n");
+
+      // Pass by reference with 'ref'
+      Console.WriteLine("--- Pass by Reference (ref keyword) ---");
+      int refValue = 10;
+      Console.WriteLine($"Before calling ModifyByRef: refValue = {refValue}");
+      ModifyByRef(ref refValue);
+      Console.WriteLine($"After calling ModifyByRef: refValue = {refValue}");
+      Console.WriteLine("Value changed - method worked with the original variable\n");
+
+      // Output parameters with 'out'
+      Console.WriteLine("--- Output Parameters (out keyword) ---");
+      string fullName = "John Michael Smith";
+      Console.WriteLine($"Original name: {fullName}");
+
+      SplitName(fullName, out string firstName, out string lastName);
+      Console.WriteLine($"First name: {firstName}");
+      Console.WriteLine($"Last name: {lastName}");
+      Console.WriteLine("'out' parameters don't need to be initialized before the call\n");
+
+      // Input parameters with 'in' - for performance with large structs
+      Console.WriteLine("--- Input Parameters (in keyword) ---");
+      BigCalculationData bigData = new BigCalculationData(1000, "Performance Test Data");
+      Console.WriteLine($"Original data description: {bigData.Description}");
+
+      double sum = ProcessBigData(in bigData);
+      Console.WriteLine($"Sum calculated: {sum:F2}");
+      Console.WriteLine("'in' keyword prevents copying large structs - better performance!\n");
+    }
+
+    // Pass by value - method gets a copy
+    static void ModifyByValue(int parameter)
+    {
+      Console.WriteLine($"  Inside ModifyByValue: received {parameter}");
+      parameter = parameter * 2;
+      Console.WriteLine($"  Inside ModifyByValue: modified to {parameter}");
+      // Original variable remains unchanged
+    }
+
+    // Pass by reference - method works with original variable
+    static void ModifyByRef(ref int parameter)
+    {
+      Console.WriteLine($"  Inside ModifyByRef: received {parameter}");
+      parameter = parameter * 2;
+      Console.WriteLine($"  Inside ModifyByRef: modified to {parameter}");
+      // Original variable is changed
+    }
+
+    // Output parameters - method must assign values
+    static void SplitName(string fullName, out string firstName, out string lastName)
+    {
+      int lastSpaceIndex = fullName.LastIndexOf(' ');
+      if (lastSpaceIndex > 0)
+      {
+        firstName = fullName.Substring(0, lastSpaceIndex);
+        lastName = fullName.Substring(lastSpaceIndex + 1);
+      }
+      else
+      {
+        firstName = fullName;
+        lastName = "";
+      }
+    }
+
+    // Input parameter - readonly reference for performance
+    static double ProcessBigData(in BigCalculationData data)
+    {
+      Console.WriteLine($"  Processing: {data.Description}");
+      Console.WriteLine($"  Array size: {data.Values?.Length ?? 0} elements");
+
+      // We can read from the parameter but cannot modify it
+      // data.Description = "Modified"; // This would cause a compiler error
+
+      return data.Sum();
+    }
+
 
   }
 }
