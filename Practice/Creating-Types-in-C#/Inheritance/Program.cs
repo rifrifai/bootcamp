@@ -21,6 +21,10 @@
         Console.WriteLine("\nPress any key to continue to POLYMORPHISM...");
         Console.ReadKey();
         Console.Clear();
+
+        // 2. Polymorphism - Many forms, one interface
+        PolymorphismClass.RunDemo();
+
       }
       catch (Exception ex)
       {
