@@ -50,9 +50,11 @@
       // instance field - each object gets its own copy
       var octopus1 = new Octopus("Oscar");
       var octopus2 = new Octopus("Ollie");
+      var octopus3 = new Octopus("Jacky");
 
       Console.WriteLine($"  Octopus 1: {octopus1.Name}, Age: {octopus1.Age}");
       Console.WriteLine($"  Octopus 2: {octopus2.Name}, Age: {octopus2.Age}");
+      Console.WriteLine($"  Octopus 3: {octopus3.Name}, Age: {octopus3.Age}");
 
       // static fields - shared across ALL instances
       Console.WriteLine($"  All octopuses have {Octopus.Legs} legs (static field)");
@@ -64,6 +66,28 @@
 
       Console.WriteLine("✅ Instance fields are per-object, static fields are per-type\n");
     }
-    static void Constants() { }
+
+    /// <summary>
+    /// Constants vs static readonly fields
+    /// When to use which and their compilation differences
+    /// </summary>
+    static void Constants()
+    {
+      Console.WriteLine("3. Constants vs Static Readonly:");
+
+      // Constants - compile-time values, baked into consuming assemblies
+      Console.WriteLine($"  PI (const): {MathConstants.PI}");
+      Console.WriteLine($"  Speed of Light (const): {MathConstants.SPEED_OF_LIGHT:E} m/s");
+
+      // Static readonly - runtime values, can be different each run
+      Console.WriteLine($"  App Start Time (static readonly): {MathConstants.ApplicationStartTime}");
+      Console.WriteLine($"  Random Seed (static readonly): {MathConstants.RandomSeed}");
+
+      // Local constants
+      const int LOCAL_MAX = 100;
+      Console.WriteLine($"  Local constant: {LOCAL_MAX}");
+
+      Console.WriteLine("✅ Use const for truly constant values, static readonly for runtime constants\n");
+    }
   }
 }
