@@ -105,6 +105,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Creating-Types-in-C#", "Cre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Classes", "Practice\Creating-Types-in-C#\Classes\Classes.csproj", "{F78ED4B7-DDB4-4E8C-B839-4E60FA4C2BA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inheritance", "Practice\Creating-Types-in-C#\Inheritance\Inheritance.csproj", "{643218E2-98FC-4621-BF32-B310C4C81578}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -643,6 +645,18 @@ Global
 		{F78ED4B7-DDB4-4E8C-B839-4E60FA4C2BA6}.Release|x64.Build.0 = Release|Any CPU
 		{F78ED4B7-DDB4-4E8C-B839-4E60FA4C2BA6}.Release|x86.ActiveCfg = Release|Any CPU
 		{F78ED4B7-DDB4-4E8C-B839-4E60FA4C2BA6}.Release|x86.Build.0 = Release|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Debug|x64.Build.0 = Debug|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Debug|x86.Build.0 = Debug|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Release|Any CPU.Build.0 = Release|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Release|x64.ActiveCfg = Release|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Release|x64.Build.0 = Release|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Release|x86.ActiveCfg = Release|Any CPU
+		{643218E2-98FC-4621-BF32-B310C4C81578}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -694,5 +708,6 @@ Global
 		{4CAE4436-D987-4D3E-A27B-7BA0D3F83427} = {E4CA708A-A13D-4308-A3DC-1407B4C0D2F3}
 		{3930D7BD-17AB-6A12-43E0-186235190B13} = {F03061C2-8EFA-47B6-8F11-904E6EC64631}
 		{F78ED4B7-DDB4-4E8C-B839-4E60FA4C2BA6} = {3930D7BD-17AB-6A12-43E0-186235190B13}
+		{643218E2-98FC-4621-BF32-B310C4C81578} = {3930D7BD-17AB-6A12-43E0-186235190B13}
 	EndGlobalSection
 EndGlobal
