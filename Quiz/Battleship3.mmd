@@ -1,0 +1,57 @@
+classDiagram
+direction TB
+
+class IPlayer {
+    <<interface>>
+    +string Name
+    +void TakeTurn(Coordinate coord)
+}
+
+class Player {
+    -string name
+    +string Name
+    +void TakeTurn(Coordinate coord)
+}
+
+class Coordinate {
+    +int X
+    +int Y
+}
+
+class Board {
+    -Cell[][] grid
+    -List~IShip~ ships
+    +bool IsPositionValid(Coordinate coord)
+    +void PlaceShip(IShip ship)
+}
+
+class IShip {
+    <<interface>>
+    +bool IsSunk()
+    +void Hit()
+}
+
+class Ship {
+    -int health
+    +bool IsSunk()
+    +void Hit()
+}
+
+class GameController {
+    -IPlayer player1
+    -IPlayer player2
+    -IPlayer currentPlayer
+    -Board board
+    +Action<IPlayer> OnTurnEnd
+    +void StartGame()
+    +void TakeTurn(Coordinate coord)
+    +void SwitchTurn()
+    +bool IsGameOver()
+    +IPlayer? CheckWinner()
+}
+
+IPlayer <|.. Player
+IShip <|.. Ship
+GameController --> Board
+GameController --> IPlayer
+Board --> IShip

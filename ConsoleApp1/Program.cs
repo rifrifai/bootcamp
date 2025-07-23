@@ -1,69 +1,86 @@
-﻿// See https://aka.ms/new-console-template for more information
-// Task 1
-Console.Write("Masukkan no : ");
-string? answer = Console.ReadLine();
-if (int.TryParse(answer, out int num) && num > 0)
+﻿namespace Delegate
 {
-  for (int i = 1; i <= num; i++)
+  class Program
   {
-    if (i % 3 == 0 && i % 5 == 0)
+    static void Main()
     {
-      Console.Write("foobar");
+      Console.WriteLine("*** We'll learn Delegate on my own from scratch ***");
+
+      BasicDelegate();
+      ParameterMethodDelegate();
+      FibonacciDelegate();
     }
-    else if (i % 3 == 0)
+
+    public delegate int Operation(int num1, int num2);
+    static void BasicDelegate()
     {
-      Console.Write("foo");
+      static int Tambah(int a, int b) => a + b;
+      static int Kali(int a, int b) => a * b;
+      static int Bagi(int a, int b) => a / b;
+      Console.WriteLine("\n==Basic Delegate==");
+
+      Operation op;
+      op = Tambah;
+      Console.WriteLine($"menggunakan delegate hasil dari 5 + 5 = {op(5, 5)}");
+      op = Kali;
+      Console.WriteLine($"menggunakan delegate hasil dari 5 * 5 = {op(5, 5)}");
+      op = Bagi;
+      Console.WriteLine($"menggunakan delegate hasil dari 5 : 5 = {op(5, 5)} \n");
     }
-    else if (i % 5 == 0)
+
+    // parameter and method delegate
+    public delegate bool Filter(int numbers);
+    static void ShowNumbers(int[] numbers, Filter filter)
     {
-      Console.Write("bar");
+      foreach (int num in numbers)
+      {
+        if (filter(num))
+          Console.Write($"{num} ");
+      }
     }
-    else
+    static bool IsGanjil(int numbers) => numbers % 2 == 1;
+    static bool IsGenap(int numbers) => numbers % 2 == 0;
+
+    static void ParameterMethodDelegate()
     {
-      Console.Write(i);
+      Console.WriteLine("==Parameter Method Delegate==");
+      int[] numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+
+      Console.Write("berikut filter angka genap menggunakan delegate: ");
+      ShowNumbers(numbers, IsGenap);
+      Console.Write("\nberikut filter angka ganjil menggunakan delegate: ");
+      ShowNumbers(numbers, IsGanjil);
+      Console.WriteLine();
     }
-    if (i < num) Console.Write(",");
+
+    // fibonacci delegate
+    public delegate int FibonacciDel(int numbers);
+
+    // calc fibonacci
+    static int CalcFibo(int numbers)
+    {
+      if (numbers <= 1) return numbers;
+      return CalcFibo(numbers - 1) + CalcFibo(numbers - 2);
+    }
+
+    // show fibonacci until n
+    static void ShowFibo(int numbers, FibonacciDel fibonacciDel)
+    {
+      for (int i = 0; i < numbers; i++)
+      {
+        Console.Write($"{fibonacciDel(i)} ");
+      }
+      Console.WriteLine();
+    }
+
+    static void FibonacciDelegate()
+    {
+      Console.WriteLine("\n==Fibonacci Delegate==");
+      // int.TryParse(Console.ReadLine(), out int result);
+
+      Console.WriteLine("Deret fibonacci: ");
+      ShowFibo(15, CalcFibo);
+
+    }
   }
 }
-else
-{
-  Console.WriteLine("Masukkan nomor yang valid");
-}
-
-// type basic
-// string pesan = "Tahun Lahir";
-// string finalPesan = pesan.ToUpper();
-// int tahunLahir = 2001;
-// string tahunLahirr = tahunLahir.ToString();
-// Console.WriteLine(finalPesan + " " + tahunLahirr);
-
-// int satuKM = 900;
-// bool isItAKM = satuKM >= 1000;
-// if (isItAKM)
-// {
-//   Console.WriteLine("Ini 1KM atau bahkan lebih");
-// }
-
-// Division
-// int num = 2 / 3;
-//int b = 0;
-//int c = 5 / b; //Throws DevideByZeroExpection at run time;
-//int d = 5 / 0; //Compile-time error
-// Console.WriteLine(c);
-
-// Overflow
-// int num = int.MinValue;
-// num--;
-// Console.WriteLine(num == int.MaxValue);
-// int num2 = int.MaxValue;
-// num2++;
-// Console.WriteLine(num2 == int.MinValue);
-
-// int num3 = 1000000;
-// int num4 = 1000000;
-// Console.WriteLine(checked(num3 * num4));
-
-// String Concatenation
-// string x = "b" + 2;
-// Console.WriteLine(x);
-

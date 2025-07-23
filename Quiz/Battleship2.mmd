@@ -1,0 +1,55 @@
+classDiagram
+class GameController {
+    -Player player1
+    -Player player2
+    -Player currentPlayer
+    +StartGame()
+    +TakeTurn(coord: Coordinate): bool
+    +SwitchTurn()
+    +IsGameOver(): bool
+    +CheckWinner(): Player?
+    +event ShotFired(Player shooter, Coordinate target, bool hit)
+}
+class Board {
+    -Cell[][] grid
+    -List~Ship~ ships
+    +PlaceShip(ship: Ship, coords: List~Coordinate~)
+    +ReceiveShot(coord: Coordinate): bool
+    +AllShipsSunk(): bool
+    +GetCell(coord: Coordinate): Cell
+}
+class Player {
+    -string name
+    -Board board
+    +Shoot(Player opponent, Coordinate target): bool
+}
+class Cell {
+    -Coordinate position
+    -bool isHit
+    -Ship~ ship
+    +MarkHit()
+    +HasShip(): bool
+}
+class Ship {
+    -string name
+    -int size
+    -int hits
+    -List~Coordinate~ coordinates
+    +RegisterHit(coord: Coordinate)
+    +IsSunk(): bool
+    +Occupies(coord: Coordinate): bool
+}
+class Coordinate {
+    -int x
+    -int y
+    +Equals(Coordinate): bool
+    +ToString(): string
+}
+GameController --> Player : manages players
+Player --> Board : owns
+Board --> Cell : has grid of
+Board --> Ship : places ships
+Cell --> Ship : may contain
+Ship --> Coordinate : stores many
+Cell --> Coordinate : positioned at
+GameController --> "delegate ShotFired" : fires event
