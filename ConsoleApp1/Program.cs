@@ -9,6 +9,7 @@
       BasicDelegate();
       ParameterMethodDelegate();
       FibonacciDelegate();
+      DelegateStatistic();
     }
 
     public delegate int Operation(int num1, int num2);
@@ -81,6 +82,70 @@
       Console.WriteLine("Deret fibonacci: ");
       ShowFibo(15, CalcFibo);
 
+      Console.WriteLine();
+
     }
+
+    // delegate bertipe fungsi statistik
+    public delegate int StatisticDelegate(int[] data);
+
+    static int HitungRataRata(int[] data)
+    {
+      int total = 0;
+      foreach (int i in data)
+      {
+        total += i;
+      }
+      return total / data.Length;
+    }
+
+    static int HitungMax(int[] data)
+    {
+      int max = data[0];
+      foreach (int i in data)
+      {
+        if (i > max) max = i;
+      }
+      return max;
+    }
+
+    static int HitungMin(int[] data)
+    {
+      int min = data[0];
+      foreach (int i in data)
+      {
+        if (i < min) min = i;
+      }
+      return min;
+    }
+
+    static int HitungJumlah(int[] data)
+    {
+      int total = 0;
+      foreach (int i in data)
+      {
+        total += i;
+      }
+      return total;
+    }
+
+    static void ShowStatistic(string name, StatisticDelegate statisticDelegate, int[] data)
+    {
+      Console.WriteLine($"{name}: {statisticDelegate(data)}");
+    }
+
+    static void DelegateStatistic()
+    {
+      Console.WriteLine("\n=== Delegate Statistik ===");
+
+      int[] angka = { 10, 20, 15, 5, 30 };
+
+      ShowStatistic("Rata-rata", HitungRataRata, angka);
+      ShowStatistic("Nilai Max", HitungMax, angka);
+      ShowStatistic("Nilai Min", HitungMin, angka);
+      ShowStatistic("Jumlah Total", HitungJumlah, angka);
+
+    }
+
   }
 }
