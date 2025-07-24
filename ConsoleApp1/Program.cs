@@ -10,6 +10,7 @@
       ParameterMethodDelegate();
       FibonacciDelegate();
       DelegateStatistic();
+      DelegateFinal();
     }
 
     public delegate int Operation(int num1, int num2);
@@ -145,6 +146,72 @@
       ShowStatistic("Nilai Min", HitungMin, angka);
       ShowStatistic("Jumlah Total", HitungJumlah, angka);
 
+    }
+
+    // delegate final
+    static void DelegateFinal()
+    {
+      List<double> numbers = new List<double>();
+      string input;
+
+      Console.WriteLine("=== Program Statistik Angka ===");
+      Console.WriteLine("Masukkan angka satu per satu. Ketik 'selesai' untuk menghitung statistik.");
+
+      // input data dari user
+      while (true)
+      {
+        Console.WriteLine("Angka: ");
+        input = Console.ReadLine();
+
+        if (input.ToLower() == "selesai") break;
+
+        if (double.TryParse(input, out double number))
+        {
+          numbers.Add(number);
+        }
+        else
+        {
+          Console.WriteLine("Invalid Input, Enter a number or 'Exit'");
+        }
+      }
+
+      // check if there is no number
+      if (numbers.Count == 0)
+      {
+        Console.WriteLine("There is no number inputed");
+        return;
+      }
+
+      // delegate dalam bentuk angka
+      Action<List<double>> ShowStatistic = data =>
+      {
+        Console.WriteLine("\n=== Statistic ===");
+        Console.WriteLine($"Jumlah data: {data.Count}");
+        Console.WriteLine($"Rata - rata: {data.Average()}");
+        Console.WriteLine($"Nilai min: {data.Min()}");
+        Console.WriteLine($"Nilai max: {data.Max()}");
+        Console.WriteLine($"Median: {HitungMedian(data)}");
+
+
+      };
+
+      // show result
+      ShowStatistic(numbers);
+    }
+
+    // fungsi untuk menghitung median
+    static double HitungMedian(List<double> data)
+    {
+      var sorted = data.OrderBy(x => x).ToList();
+      int count = sorted.Count;
+      if (count % 2 == 1)
+      {
+        return sorted[count / 2];   //ganjil
+      }
+      else
+      {
+        return (sorted[count / 2 - 1] + sorted[count / 2]) / 2.0;   //genap
+      }
     }
 
   }

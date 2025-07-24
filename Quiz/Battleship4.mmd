@@ -12,6 +12,7 @@ classDiagram
     +AllShipsSunk(): bool
     +IsSunk(): bool
     +Occupies(Coordinate): bool
+    +MarkHit()
   }
 
   class Player {
@@ -25,17 +26,13 @@ classDiagram
 
   class Board {
     -Cell[][] _grid
-    +PlaceShip(Ship, List~Coordinate~): bool
-    +ReceiveShot(Coordinate): bool
-    +GetCell(Coordinate): Cell
-    +AllShipsSunk(): bool
+    +GetCell(Coordinate): Cell  
   }
 
   class Cell {
     -Coordinate _position
     -bool _isHit
     -Ship? _ship
-    +MarkHit()
     +HasShip(): bool
   }
 
@@ -45,14 +42,11 @@ classDiagram
     -int _hits
     -List~Coordinate~ _coordinates
     +RegisterHit(Coordinate)
-    +IsSunk(): bool
-    +Occupies(Coordinate): bool
   }
 
   class Coordinate {
     -int _x
     -int _y
-    +Equals(Coordinate other): bool
     +ToString(): string
   }
 
@@ -63,4 +57,5 @@ classDiagram
   Ship --> Coordinate
   Cell --> Ship
   Cell --> Coordinate
+
 
