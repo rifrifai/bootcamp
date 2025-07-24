@@ -12,6 +12,7 @@
       DelegateStatistic();
       // DelegateFinal();
       FuncAction();
+      Kalkulator();
     }
 
     public delegate int Operation(int num1, int num2);
@@ -243,6 +244,26 @@
       Func<string, int> hitungHuruf = teks => teks.Length;
       int panjang = hitungHuruf("cristianoRonaldo");
       Console.WriteLine($"jumlah huruf pada 'cristianoRonaldo' = {panjang}");
+    }
+
+    static void Kalkulator()
+    {
+      // delegate for math operations
+      Func<double, double, double> tambah = (a, b) => a + b;
+      Func<double, double, double> kurang = (a, b) => a - b;
+      Func<double, double, double> kali = (a, b) => a * b;
+      Func<double, double, double> bagi = (a, b) =>
+      {
+        if (b == 0)
+        {
+          Console.WriteLine("tidak bisa dibagi dengan 0");
+          return 0;
+        }
+        return a / b;
+      };
+
+      // action to print result
+      Action<string> showHasil = hasil => Console.WriteLine($"hasil = {hasil}");
     }
 
   }
