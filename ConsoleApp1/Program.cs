@@ -10,7 +10,8 @@
       ParameterMethodDelegate();
       FibonacciDelegate();
       DelegateStatistic();
-      DelegateFinal();
+      // DelegateFinal();
+      FuncAction();
     }
 
     public delegate int Operation(int num1, int num2);
@@ -212,6 +213,36 @@
       {
         return (sorted[count / 2 - 1] + sorted[count / 2]) / 2.0;   //genap
       }
+    }
+
+    // func and action pada delegate
+
+    static void FuncAction()
+    {
+      Action<string> sapa = nama =>
+      {
+        Console.WriteLine($"Halo {nama}, Selamat belajar c#!");
+      };
+      sapa("Budi");
+      Console.WriteLine();
+
+      Action<int, int> tambah = (a, b) =>
+      {
+        Console.WriteLine($"Hasil: {a + b}");
+      };
+      tambah(10, 13);
+      Console.WriteLine();
+
+      Action<int, int> kurang = (a, b) =>
+      {
+        Console.WriteLine($"Hasil a - b = {a - b}");
+      };
+      kurang(10, 20);
+      Console.WriteLine();
+
+      Func<string, int> hitungHuruf = teks => teks.Length;
+      int panjang = hitungHuruf("cristianoRonaldo");
+      Console.WriteLine($"jumlah huruf pada 'cristianoRonaldo' = {panjang}");
     }
 
   }
