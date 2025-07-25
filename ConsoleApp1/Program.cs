@@ -264,6 +264,48 @@
 
       // action to print result
       Action<string> showHasil = hasil => Console.WriteLine($"hasil = {hasil}");
+
+      while (true)
+      {
+        Console.WriteLine("\n=== Kalkulator Sederhana ===");
+        Console.Write("Masukkan angka pertama: ");
+        double angka1 = double.Parse(Console.ReadLine());
+
+        Console.Write("Masukkan operator (+, *, /, -): ");
+        string? op = Console.ReadLine();
+
+        Console.Write("Masukkan angka kedua: ");
+        double angka2 = double.Parse(Console.ReadLine());
+
+        double hasil = 0;
+        bool operasiValid = true;
+
+        switch (op)
+        {
+          case "+":
+            hasil = tambah(angka1, angka2);
+            break;
+          case "-":
+            hasil = kurang(angka1, angka2);
+            break;
+          case "*":
+            hasil = kali(angka1, angka2);
+            break;
+          case "/":
+            hasil = bagi(angka1, angka2);
+            break;
+          default:
+            Console.WriteLine("Invalid Operator");
+            operasiValid = false;
+            break;
+        }
+
+        if (operasiValid) showHasil(hasil.ToString());
+
+        Console.Write("\nHitung lagi? (y/n): ");
+        string ulang = Console.ReadLine().ToLower();
+        if (ulang != "y") break;
+      }
     }
 
   }
