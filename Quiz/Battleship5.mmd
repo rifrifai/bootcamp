@@ -1,0 +1,105 @@
+classDiagram
+
+  %% ==== Interfaces ====
+  class IPlayer {
+    <<interface>>
+    +GetName()
+  }
+
+  class IBoard {
+    <<interface>>
+    +GetCell(Coordinate): ICell
+
+  }
+
+  class ICell {
+    <<interface>>
+    +MarkHit()
+    +HasShip(): bool
+  }
+
+  %% ==== Implementations ====
+  class Player {
+    -string _name
+    -IBoard _ownBoard
+    -IBoard _trackingBoard
+    -List~Ship~ _fleet
+    +GetName()
+  }
+
+  class Board {
+    -ICell[][] _grid
+    +GetCell(Coordinate): ICell
+  }
+
+  class Cell {
+    -Coordinate _position
+    -bool _isHit
+    -Ship? _ship
+    +MarkHit()
+    +HasShip(): bool
+  }
+
+  class ShipType {
+    CARRIER
+    BATTLESHIP
+    CRUISER
+    SUBMARINE
+    DESTROYER
+    <<enumeration>>
+  }
+
+  %% ==== Core Classes ====
+  class GameController {
+    -List~IPlayer~ _players
+    -IPlayer _currentPlayerIndex
+    -IBoard board
+    +StartGame()
+    +TakeTurn(Coordinate)
+    +SwitchTurn()
+    +IsGameOver(): bool
+    +CheckWinner(): IPlayer?
+    +OnShotFired: Action<IPlayer, Coordinate, bool>
+    +Shoot(Coordinate): bool
+    +RemainingShips(): int
+    +PlaceShip(ShipType, List~Coordinate~, ): bool
+    +ReceiveShot(Coordinate): bool
+    +AllShipsSunk(): bool
+  }
+
+  class Ship {
+    -string _name
+    -int _size
+    -int _hits
+    -List~Coordinate~ _coordinates
+    +RegisterHit(Coordinate)
+    +IsSunk(): bool
+  }
+
+  class Coordinate {
+    -int _x
+    -int _y
+    +Equals(Coordinate): bool
+    +ToString(): string
+  }
+
+  %% ==== Relationships ====
+  GameController --> IPlayer
+  GameController --> IBoard
+  GameController --> ICell
+  GameController --> Ship
+  GameController --> Coordinate
+  IPlayer <|.. Player
+  IBoard <|.. Board
+  ICell <|.. Cell
+  Ship --> ShipType
+  IBoard --> ICell
+
+  %% Player --> IBoard
+
+  %% Board --> ICell
+
+  %% Board --> Ship
+  %% Ship --> Coordinate
+  %% Cell --> Coordinate
+  %% Cell --> Ship

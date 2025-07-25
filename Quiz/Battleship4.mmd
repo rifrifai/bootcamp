@@ -59,3 +59,72 @@ classDiagram
   Cell --> Coordinate
 
 
+%% classDiagram
+%%   class GameController {
+%%     -List<IPlayer> _players
+%%     -int currentPlayerIndex  
+%%     +StartGame()
+%%     +TakeTurn(coord: Coordinate)
+%%     +SwitchTurn()
+%%     +IsGameOver(): bool
+%%     +CheckWinner(): Player?
+%%     +OnShotFired: Action~Player, Coordinate, bool>
+%%     +PlaceShip(Ship, List~Coordinate~): bool
+%%     +ReceiveShot(Coordinate): bool
+%%     +AllShipsSunk(): bool
+%%     +IsSunk(): bool
+%%     +Occupies(Coordinate): bool
+%%   }
+
+%%   class Player {
+%%     -string _name
+%%     -Board _ownBoard
+%%     -Board _trackingBoard
+%%     -List~Ship~ _fleet
+   
+%%   }
+
+%%   class IPlayer {
+%%     +Shoot(Coordinate): bool
+%%     +RemainingShips(): int
+%%     <<Intertace>>
+%%   }
+
+%%   class Board {
+%%     -Cell[][] _grid
+%%     +GetCell(Coordinate): Cell  
+%%   }
+
+%%   class Cell {
+%%     -Coordinate _position
+%%     -bool _isHit
+%%     -Ship? _ship
+%%     +MarkHit()
+%%     +HasShip(): bool
+%%   }
+
+%%   class Ship {
+%%     -string _name
+%%     -int _size
+%%     -int _hits
+%%     -List~Coordinate~ _coordinates
+%%     +RegisterHit(Coordinate)
+%%   }
+
+%%   class Coordinate {
+%%     -int _x
+%%     -int _y
+%%     +ToString(): string
+%%   }
+
+%%   %% === RELATIONSHIPS ===
+%%   GameController --> Player
+%%   IPlayer <-- Player
+%%   Player --> Board
+%%   Board --> Cell
+%%   Board --> Ship
+%%   Ship --> Coordinate
+%%   Cell --> Ship
+%%   Cell --> Coordinate
+
+
