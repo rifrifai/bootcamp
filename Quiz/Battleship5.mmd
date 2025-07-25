@@ -65,6 +65,8 @@ classDiagram
     +PlaceShip(ShipType, List~Coordinate~, ): bool
     +ReceiveShot(Coordinate): bool
     +AllShipsSunk(): bool
+    +RegisterHit(Coordinate)
+    +IsSunk(): bool
   }
 
   class Ship {
@@ -72,8 +74,6 @@ classDiagram
     -int _size
     -int _hits
     -List~Coordinate~ _coordinates
-    +RegisterHit(Coordinate)
-    +IsSunk(): bool
   }
 
   class Coordinate {
