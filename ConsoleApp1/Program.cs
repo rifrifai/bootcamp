@@ -6,13 +6,14 @@
     {
       Console.WriteLine("*** We'll learn Delegate on my own from scratch ***");
 
-      BasicDelegate();
-      ParameterMethodDelegate();
-      FibonacciDelegate();
-      DelegateStatistic();
+      // BasicDelegate();
+      // ParameterMethodDelegate();
+      // FibonacciDelegate();
+      // DelegateStatistic();
       // DelegateFinal();
-      FuncAction();
-      Kalkulator();
+      // FuncAction();
+      // Kalkulator();
+      LogicExercise();
     }
 
     public delegate int Operation(int num1, int num2);
@@ -163,9 +164,9 @@
       while (true)
       {
         Console.WriteLine("Angka: ");
-        input = Console.ReadLine();
+        input = Console.ReadLine() ?? "";
 
-        if (input.ToLower() == "selesai") break;
+        if (input?.ToLower() == "selesai") break;
 
         if (double.TryParse(input, out double number))
         {
@@ -269,13 +270,13 @@
       {
         Console.WriteLine("\n=== Kalkulator Sederhana ===");
         Console.Write("Masukkan angka pertama: ");
-        double angka1 = double.Parse(Console.ReadLine());
+        _ = double.TryParse(Console.ReadLine(), out double angka1);
 
         Console.Write("Masukkan operator (+, *, /, -): ");
         string? op = Console.ReadLine();
 
         Console.Write("Masukkan angka kedua: ");
-        double angka2 = double.Parse(Console.ReadLine());
+        _ = double.TryParse(Console.ReadLine(), out double angka2);
 
         double hasil = 0;
         bool operasiValid = true;
@@ -303,8 +304,35 @@
         if (operasiValid) showHasil(hasil.ToString());
 
         Console.Write("\nHitung lagi? (y/n): ");
-        string ulang = Console.ReadLine().ToLower();
-        if (ulang != "y") break;
+        // string? ulang = (Console.ReadLine() ?? "").ToLower();
+        // string? ulang = Console.ReadLine()!.ToLower();
+        string? ulang = Console.ReadLine()!.ToLower();
+        // if (ulang != "y") break;
+        if (ulang != null && ulang.ToLower() != "y") break;
+      }
+    }
+
+    static void LogicExercise()
+    {
+      Console.WriteLine("Enter a valid number: ");
+      _ = int.TryParse(Console.ReadLine(), out int jawab);
+      if (jawab > 0)
+      {
+        for (int i = 1; i <= jawab; i++)
+        {
+          string hasil = (i % 3 == 0 ? "foo" : "") +
+                          (i % 5 == 0 ? "bar" : "") +
+                          (i % 7 == 0 ? "jazz" : "") +
+                          (i % 4 == 0 ? "baz" : "") +
+                          (i % 9 == 0 ? "huzz" : "");
+
+          Console.Write(string.IsNullOrEmpty(hasil) ? i.ToString() : hasil);
+          if (i < jawab) Console.Write(", ");
+        }
+      }
+      else
+      {
+        Console.WriteLine("Invalid number!");
       }
     }
 

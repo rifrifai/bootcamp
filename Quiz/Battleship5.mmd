@@ -3,22 +3,23 @@ classDiagram
   class GameController {
     -List~IPlayer~ _players
     -int _currentPlayerIndex = 0
-    -IBoard board
-    -Dictionary~IPlayer, _fleet~
-    +StartGame()
-    +TakeTurn(Coordinate)
-    +SwitchTurn()
-    +EndGame(): bool
-    +CheckWinner(): IPlayer?
+    -IBoard _ownBoard
+    -IBoard _trackingBoard
+    -Dictionary~IPlayer, List<Ship>~ _fleet
     +OnShotFired: Action~IPlayer, Coordinate~
+    +StartGame(): void
+    +TakeTurn(Coordinate): void
+    +SwitchTurn(): void
+    +EndGame(): bool
+    +CheckWinner(): IPlayer
     +Shoot(Coordinate): bool
     +RemainingShips(): int
-    +PlaceShip(ShipType, List~Coordinate~ ): bool
+    +PlaceShip(ShipType, List~Coordinate~): bool
     +ReceiveShot(Coordinate): bool
     +AllShipsSunk(): bool
-    +RegisterHit(Coordinate)
+    +RegisterHit(Coordinate): void
     +IsSunk(): bool
-    +MarkHit(Coordinate)
+    +MarkHit(Coordinate): void
     +HasShip(Coordinate):bool
   }
 
@@ -27,6 +28,11 @@ classDiagram
     -int _size
     -int _hits
     -List~Coordinate~ _coordinates
+    +GetType(): ShipType
+    +GetName(): string
+    +SetName(name: string): void
+    +GetSize(): int
+    +SetSize(size: int): void
   }
 
   class Coordinate {
@@ -39,8 +45,8 @@ classDiagram
   %% ==== Interfaces ====
   class IPlayer {
     <<interface>>
-    +GetName()
-    +SetName()
+    +GetName(): string
+    +SetName(name: string): void
   }
 
   class IBoard {
@@ -50,21 +56,23 @@ classDiagram
 
   class IShip{
     <<interface>>
-    +GetType(ShipType)
+    +GetType(): ShipType
+    +GetName(): string
+    +SetName(name: string): void
+    +GetSize(): int
+    +SetSize(size: int): void
   }
 
   %% ==== Implementations ====
   class Player {
     -string _name
-    -IBoard _ownBoard
-    -IBoard _trackingBoard
-    -List~Ship~ _fleet
-    +GetName()
-    +SetName()
+    +GetName(): string
+    +SetName(name: string) void
   }
 
   class Board {
     -Cell[][] _grid
+    -Dictionary~Coordinate, Ship~ _ships
     +GetBoard(Coordinate): Cell
 
   }
@@ -73,6 +81,8 @@ classDiagram
     -Coordinate _position
     -bool _isHit
     -Ship? _ship
+    +GetPosition(): Coordinate
+    +GetShip(): Ship
   }
 
   class ShipType {

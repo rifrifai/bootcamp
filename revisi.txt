@@ -7,8 +7,8 @@ revisi kemarin:
 
 revisi hari ini:
 -record struck coordinate untuk cek masing masing✅
--player hanya name, sisanya GC
--fleet, dictionary
+-player hanya name, sisanya GC ✅
+-fleet, dictionary ✅
 -GetType public ✅
 -ship interface ✅
--setter getter method, penulisannya lebih detail
+-setter getter method, penulisannya lebih detail ✅
