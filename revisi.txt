@@ -1,0 +1,8 @@
+revisi kemarin:
+-semua method yang mempengaruhi game diletakkan di GC
+-gunakan interface
+-yang tidak bisa dipahami dihilangkan, like IShotHandler
+-tipe kapal
+
+
+revisi hari ini:
