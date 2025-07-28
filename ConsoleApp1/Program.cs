@@ -6,13 +6,13 @@
     {
       Console.WriteLine("*** We'll learn Delegate on my own from scratch ***");
 
-      // BasicDelegate();
-      // ParameterMethodDelegate();
-      // FibonacciDelegate();
-      // DelegateStatistic();
-      // DelegateFinal();
-      // FuncAction();
-      // Kalkulator();
+      BasicDelegate();
+      ParameterMethodDelegate();
+      FibonacciDelegate();
+      DelegateStatistic();
+      DelegateFinal();
+      FuncAction();
+      Kalkulator();
       LogicExercise();
     }
 
@@ -307,8 +307,8 @@
         // string? ulang = (Console.ReadLine() ?? "").ToLower();
         // string? ulang = Console.ReadLine()!.ToLower();
         string? ulang = Console.ReadLine()!.ToLower();
-        // if (ulang != "y") break;
-        if (ulang != null && ulang.ToLower() != "y") break;
+        if (ulang != "y") break;
+        // if (ulang != null && ulang.ToLower() != "y") break;
       }
     }
 
