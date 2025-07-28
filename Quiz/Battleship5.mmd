@@ -4,12 +4,13 @@ classDiagram
     -List~IPlayer~ _players
     -int _currentPlayerIndex = 0
     -IBoard board
+    -Dictionary~IPlayer, _fleet~
     +StartGame()
     +TakeTurn(Coordinate)
     +SwitchTurn()
     +EndGame(): bool
     +CheckWinner(): IPlayer?
-    +OnShotFired: Action<IPlayer, Coordinate, bool>
+    +OnShotFired: Action~IPlayer, Coordinate~
     +Shoot(Coordinate): bool
     +RemainingShips(): int
     +PlaceShip(ShipType, List~Coordinate~ ): bool
@@ -26,14 +27,13 @@ classDiagram
     -int _size
     -int _hits
     -List~Coordinate~ _coordinates
-    +GetType(ShipType)
   }
 
   class Coordinate {
     -int _x
     -int _y
-    +Equals(Coordinate): bool
     +ToString(): string
+    <<record struct>>
   }
 
   %% ==== Interfaces ====
@@ -46,6 +46,11 @@ classDiagram
   class IBoard {
     <<interface>>
     +GetBoard(Coordinate): Cell
+  }
+
+  class IShip{
+    <<interface>>
+    +GetType(ShipType)
   }
 
   %% ==== Implementations ====
@@ -82,8 +87,9 @@ classDiagram
   %% ==== Relationships ====
   GameController --> IPlayer
   GameController --> IBoard
-  GameController --> Ship
+  GameController --> IShip
   GameController --> Coordinate
+  IShip <|.. Ship
   IPlayer <|.. Player
   IBoard <|.. Board
   Board --> Cell
