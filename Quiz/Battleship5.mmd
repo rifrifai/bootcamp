@@ -2,7 +2,7 @@ classDiagram
   %% ==== Core Classes ====
   class GameController {
     -List~IPlayer~ _players
-    -IPlayer _currentPlayerIndex
+    -int _currentPlayerIndex = 0
     -IBoard board
     +StartGame()
     +TakeTurn(Coordinate)
@@ -26,6 +26,7 @@ classDiagram
     -int _size
     -int _hits
     -List~Coordinate~ _coordinates
+    -GetType(ShipType)
   }
 
   class Coordinate {
@@ -44,7 +45,7 @@ classDiagram
 
   class IBoard {
     <<interface>>
-    +GetBoard(Coordinate): IBoard
+    +GetBoard(Coordinate): Cell
   }
 
   %% ==== Implementations ====
@@ -58,12 +59,15 @@ classDiagram
   }
 
   class Board {
-    -IBoard[][] _grid
+    -Cell[][] _grid
+    +GetBoard(Coordinate): Cell
+
+  }
+
+  class Cell {
     -Coordinate _position
     -bool _isHit
     -Ship? _ship
-    +GetBoard(Coordinate): IBoard
-
   }
 
   class ShipType {
@@ -82,9 +86,6 @@ classDiagram
   GameController --> Coordinate
   IPlayer <|.. Player
   IBoard <|.. Board
-  Player --> Ship
-  Board --> Coordinate
-  Ship --> Coordinate
+  Board --> Cell
   Ship --> ShipType
-  Player --> IBoard
-  Board --> Ship
+  Ship --> Coordinate
