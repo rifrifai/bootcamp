@@ -23,6 +23,6 @@ public class Card : ICard
   public void SetWildType(WildType? wildType) => _wildType = wildType;
   public void GetDisplayText()
   {
-    Console.WriteLine($"");
+    Console.WriteLine($"Type: {_type}, Color: {_color}, Number: {_number}, Action: {_actionType}, Wild: {_wildType}");
   }
 }

@@ -1,6 +1,6 @@
 namespace UnoGame;
 
-public class Deck : IDeck
+public class DiscardPile : IDiscardPile
 {
   private List<ICard> _cards = [];
 
