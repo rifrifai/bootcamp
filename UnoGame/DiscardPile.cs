@@ -15,4 +15,8 @@ public class DiscardPile : IDiscardPile
       _cards[index] = card;
     }
   }
+  public void AddCard(ICard card)
+  {
+    _cards.Add(card);
+  }
 }

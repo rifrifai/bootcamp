@@ -20,6 +20,7 @@ public interface IDiscardPile
   public ICard GetCardAt(int index);
   public void SetCards(List<ICard> cards);
   public void SetCardAt(int index, ICard card);
+  public void AddCard(ICard card);
 };
 
 public interface ICard
