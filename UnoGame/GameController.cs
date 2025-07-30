@@ -18,17 +18,16 @@ public class GameController
   public Func<Color>? WildColorChooser;
   public Func<IPlayer, bool>? UnoCallChecker;
 
-  public GameController()
-  {
-    _players = new List<IPlayer>();
-    _playerhands = new Dictionary<IPlayer, List<ICard>>();
-    _deck = new Deck();
-    _discardPile = new DiscardPile();
-    _currentPlayerIndex = 0;
-    _isClockWise = true;
-    _currentWildColor = null;
-
-  }
+  // public GameController()
+  // {
+  //   _players = new List<IPlayer>();
+  //   _playerhands = new Dictionary<IPlayer, List<ICard>>();
+  //   _deck = new Deck();
+  //   _discardPile = new DiscardPile();
+  //   _currentPlayerIndex = 0;
+  //   _isClockWise = true;
+  //   _currentWildColor = null;
+  // }
   public void StartGame()
   {
     InitializeDeck();
@@ -45,6 +44,8 @@ public class GameController
 
     OnPlayerTurnChanged?.Invoke(GetCurrentPlayer());
   }
+  public IPlayer GetCurrentPlayer() => _players![_currentPlayerIndex];
+
   private void InitializeDeck()
   {
     List<ICard> cards = new List<ICard>();
@@ -85,7 +86,44 @@ public class GameController
     card.SetWildType(wild);
     return card;
   }
+
+  // private void GiveCardToPlayer(IPlayer player, ICard card)
+  // {
+  //   if (player is Player concretePlayer)
+  //   {
+  //     concretePlayer.GetHand().Add(card);
+  //   }
+  // }
   public void ShuffleDeck() { }
-  public void DealCardsToPlayers() { }
-  public ICard DrawCardFromDeck(IPlayer player) => {};
+  public ICard DrawCardFromDeck(IPlayer player)
+  {
+    if (_deck?.GetCards().Count == 0)
+    {
+      // RecycleDiscardPile();
+    }
+
+    ICard card = _deck!.GetCardAt(0);
+    _deck.GetCards().RemoveAt(0);
+    return card;
+
+  }
+  public void AddCardToPlayer(IPlayer player, ICard card)
+  {
+    if (!_playerhands!.ContainsKey(player))
+    {
+      _playerhands[player] = new List<ICard>();
+    }
+  }
+  public void DealCardsToPlayers()
+  {
+    for (int i = 0; i < 7; i++)
+    {
+      foreach (var player in _players!)
+      {
+        ICard card = DrawCardFromDeck(player);
+        AddCardToPlayer(player, card);
+      }
+    }
+  }
+
 }
