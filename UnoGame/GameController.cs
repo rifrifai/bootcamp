@@ -45,6 +45,11 @@ public class GameController
     OnPlayerTurnChanged?.Invoke(GetCurrentPlayer());
   }
   public IPlayer GetCurrentPlayer() => _players![_currentPlayerIndex];
+  public void AddPlayer(IPlayer player)
+  {
+    _players?.Add(player);
+    _playerhands?.Add(player, new List<ICard>());
+  }
 
   private void InitializeDeck()
   {
@@ -76,6 +81,12 @@ public class GameController
     }
     _deck?.SetCards(cards);
   }
+
+  public void NextPlayer()
+  {
+    int direction = _isClockWise ? 1 : -1;
+    _currentPlayerIndex = (_currentPlayerIndex + direction + _players!.Count) % _players!.Count;
+  }
   private ICard CreateCard(CardType type, Color? color, Number? number, ActionType? action, WildType? wild)
   {
     var card = new Card();
@@ -94,18 +105,35 @@ public class GameController
   //     concretePlayer.GetHand().Add(card);
   //   }
   // }
-  public void ShuffleDeck() { }
+  public void ShuffleDeck()
+  {
+    List<ICard> cards = _deck!.GetCards();
+    Random random = new();
+
+    int n = cards.Count;
+    while (n > 1)
+    {
+      int k = random.Next(n + 1);
+      ICard temp = cards[k];
+      cards[k] = cards[n];
+      cards[n] = temp;
+    }
+    _deck.SetCards(cards);
+  }
   public ICard DrawCardFromDeck(IPlayer player)
   {
-    if (_deck?.GetCards().Count == 0)
-    {
-      // RecycleDiscardPile();
-    }
+    List<ICard> cards = _deck!.GetCards();
 
-    ICard card = _deck!.GetCardAt(0);
-    _deck.GetCards().RemoveAt(0);
-    return card;
+    if (cards.Count == 0)
+      throw new InvalidOperationException("Deck is empty");
 
+    ICard topCard = cards[0];
+    cards.RemoveAt(0);
+
+    _deck.SetCards(cards);
+    _playerhands![player].Add(topCard);
+
+    return topCard;
   }
   public void AddCardToPlayer(IPlayer player, ICard card)
   {
@@ -126,4 +154,23 @@ public class GameController
     }
   }
 
+  public List<ICard> GetPlayerHand(IPlayer player) => _playerhands![player];
+  public bool PlayCard(IPlayer player, int cardIndex)
+  {
+    if (!_playerhands!.ContainsKey(player)) return false;
+
+    List<ICard> hand = _playerhands[player];
+
+    if (cardIndex < 0 || cardIndex >= hand.Count) return false;
+
+    ICard selectedCard = hand[cardIndex];
+
+    hand.RemoveAt(cardIndex);
+
+    List<ICard> discardPileCards = _discardPile!.GetCards();
+    discardPileCards.Add(selectedCard);
+    _discardPile.SetCards(discardPileCards);
+
+    return true;
+  }
 }
