@@ -118,14 +118,48 @@ public class Card : ICard
     switch (_type)
     {
       case CardType.Number:
-        return $"{_color} {_number}";
+        return $"{GetColorEmoji(_color)} {_color} {_number}";
       case CardType.Action:
-        return $"{_color} {_actionType}";
+        return $"{GetColorEmoji(_color)} {_color} {GetActionEmoji(_actionType)} {_actionType}";
       case CardType.Wild:
-        return $"{_wildType}";
+        return $"🌈 {_wildType}";
       default:
-        return "Unknown Card";
+        return "❓ Unknown Card";
     }
+  }
+
+  private string GetColorEmoji(Color? color)
+  {
+    return color switch
+    {
+      Color.Red => "🔴",
+      Color.Blue => "🔵",
+      Color.Green => "🟢",
+      Color.Yellow => "🟡",
+      _ => "⚫"
+    };
+  }
+  // private string GetColorEmoji(Color color)
+  //     {
+  //         return color switch
+  //         {
+  //             Color.Red => "🔴",
+  //             Color.Blue => "🔵",
+  //             Color.Green => "🟢",
+  //             Color.Yellow => "🟡",
+  //             _ => "⚫"
+  //         };
+  //     }
+
+  private string GetActionEmoji(ActionType? action)
+  {
+    return action switch
+    {
+      ActionType.Skip => "🚫",
+      ActionType.Reverse => "🔄",
+      ActionType.DrawTwo => "📥",
+      _ => "❓"
+    };
   }
 }
 
@@ -281,23 +315,62 @@ public class GameController
   {
     while (!IsGameOver())
     {
-      /*
       if (IsGameOver())
+      {
+        var winner = GetWinner();
+        Console.WriteLine("\n" + string.Concat(Enumerable.Repeat("🎉", 30)));
+        SetConsoleColor(ConsoleColor.Green);
+        Console.WriteLine($"🏆 {winner?.GetName()} WINS THE GAME! 🏆");
+        ResetConsoleColor();
+        Console.WriteLine(string.Concat(Enumerable.Repeat("🎉", 30)));
+        OnGameEnded?.Invoke(winner);
+
+        // Display final hand sizes
+        Console.WriteLine($"\n📊 Final hand sizes:");
+        foreach (var player in GetAllPlayers())
+        {
+          var handSize = GetPlayerHandSize(player);
+          if (handSize == 0)
           {
-              var winner = GetWinner();
-              Console.WriteLine($"\n🎉 {winner?.GetName()} wins the game! 🎉");
-              OnGameEnded?.Invoke(winner);
-              break;
+            SetConsoleColor(ConsoleColor.Green);
+            Console.WriteLine($"🏆 {player.GetName()}: {handSize} cards (WINNER!)");
+            ResetConsoleColor();
           }
-      */
+          else
+          {
+            Console.WriteLine($"📋 {player.GetName()}: {handSize} cards");
+          }
+        }
+        return;
+      }
       var currentPlayer = GetCurrentPlayer();
       OnPlayerTurnChanged?.Invoke(currentPlayer);
 
-      Console.WriteLine($"\n--- {currentPlayer.GetName()}'s Turn ---");
-      Console.WriteLine($"Top card: {GetTopDiscardCard()?.GetDisplayText()}");
+      // Display turn header with colors
+      Console.WriteLine("\n" + new string('=', 50));
+      SetConsoleColor(ConsoleColor.Green);
+      Console.WriteLine($"🎯 {currentPlayer.GetName()}'s Turn");
+      ResetConsoleColor();
+      Console.WriteLine(new string('=', 50));
+
+      var topCard = GetTopDiscardCard();
+      Console.Write("🎴 Top card: ");
+      if (topCard?.GetColor().HasValue == true)
+      {
+        SetConsoleColor(GetColorFromEnum(topCard.GetColor().Value));
+      }
+      else
+      {
+        SetConsoleColor(ConsoleColor.Magenta);
+      }
+      Console.WriteLine(topCard?.GetDisplayText());
+      ResetConsoleColor();
+
       if (_currentWildColor.HasValue)
       {
-        Console.WriteLine($"Current wild color: {_currentWildColor}");
+        SetConsoleColor(GetColorFromEnum(_currentWildColor.Value));
+        Console.WriteLine($"🌈 Current wild color: {_currentWildColor}");
+        ResetConsoleColor();
       }
 
       DisplayPlayerHand(currentPlayer);
@@ -306,14 +379,28 @@ public class GameController
 
       if (playableCards.Count == 0)
       {
-        Console.WriteLine("No playable cards. Drawing a card...");
+        SetConsoleColor(ConsoleColor.Red);
+        Console.WriteLine("❌ No playable cards. Drawing a card...");
+        ResetConsoleColor();
         var drawnCard = DrawCardFromDeck(currentPlayer);
-        Console.WriteLine($"Drew: {drawnCard.GetDisplayText()}");
+        Console.Write("📤 Drew: ");
+        if (drawnCard.GetColor().HasValue)
+        {
+          SetConsoleColor(GetColorFromEnum(drawnCard.GetColor().Value));
+        }
+        else
+        {
+          SetConsoleColor(ConsoleColor.Magenta);
+        }
+        Console.WriteLine(drawnCard.GetDisplayText());
+        ResetConsoleColor();
 
         playableCards = GetPlayableCardsFromPlayer(currentPlayer, GetTopDiscardCard());
         if (playableCards.Count == 0)
         {
-          Console.WriteLine("Still no playable cards. Turn skipped.");
+          SetConsoleColor(ConsoleColor.Yellow);
+          Console.WriteLine("⏭️ Still no playable cards. Turn skipped.");
+          ResetConsoleColor();
           NextPlayer();
           continue;
         }
@@ -331,13 +418,17 @@ public class GameController
           var calledUno = UnoCallChecker?.Invoke(currentPlayer) ?? false;
           if (!calledUno)
           {
-            Console.WriteLine($"{currentPlayer.GetName()} forgot to call UNO! Drawing 2 penalty cards.");
+            SetConsoleColor(ConsoleColor.Red);
+            Console.WriteLine($"⚠️ {currentPlayer.GetName()} forgot to call UNO! Drawing 2 penalty cards.");
+            ResetConsoleColor();
             OnUnoViolation?.Invoke(currentPlayer);
             PenalizePlayer(currentPlayer);
           }
           else
           {
-            Console.WriteLine($"{currentPlayer.GetName()} called UNO!");
+            SetConsoleColor(ConsoleColor.Yellow);
+            Console.WriteLine($"🎉 {currentPlayer.GetName()} called UNO!");
+            ResetConsoleColor();
           }
         }
 
@@ -514,10 +605,23 @@ public class GameController
     }
 
     // Default implementation - let player choose
-    Console.WriteLine("Choose a card to play:");
+    SetConsoleColor(ConsoleColor.Yellow);
+    Console.WriteLine("🎯 Choose a card to play:");
+    ResetConsoleColor();
     for (int i = 0; i < playableCards.Count; i++)
     {
-      Console.WriteLine($"{i + 1}. {playableCards[i].GetDisplayText()}");
+      Console.Write($"{i + 1}. ");
+      var card = playableCards[i];
+      if (card.GetColor().HasValue)
+      {
+        SetConsoleColor(GetColorFromEnum(card.GetColor().Value));
+      }
+      else
+      {
+        SetConsoleColor(ConsoleColor.Magenta);
+      }
+      Console.WriteLine(card.GetDisplayText());
+      ResetConsoleColor();
     }
 
     int choice;
@@ -537,12 +641,17 @@ public class GameController
         switch (card.GetActionType())
         {
           case ActionType.Skip:
-            Console.WriteLine("Next player is skipped!");
             NextPlayer(); // Move to next player (who will be skipped)
+            var skippedPlayer = GetCurrentPlayer();
+            SetConsoleColor(ConsoleColor.Red);
+            Console.WriteLine($"🚫 {skippedPlayer.GetName()} is skipped!");
+            ResetConsoleColor();
             NextPlayer(); // Move to the player after the skipped one
             return; // Don't call NextPlayer() again in GameLoop
           case ActionType.Reverse:
-            Console.WriteLine("Direction reversed!");
+            SetConsoleColor(ConsoleColor.Magenta);
+            Console.WriteLine("🔄 Direction reversed!");
+            ResetConsoleColor();
             ReverseDirection();
             // For 2 players, reverse acts like skip
             if (_players.Count == 2)
@@ -554,7 +663,9 @@ public class GameController
           case ActionType.DrawTwo:
             NextPlayer();
             var targetPlayer = GetCurrentPlayer();
-            Console.WriteLine($"{targetPlayer.GetName()} draws 2 cards and is skipped!");
+            SetConsoleColor(ConsoleColor.Yellow);
+            Console.WriteLine($"📥 {targetPlayer.GetName()} draws 2 cards and is skipped!");
+            ResetConsoleColor();
             DrawCardFromDeck(targetPlayer);
             DrawCardFromDeck(targetPlayer);
             NextPlayer(); // Skip the player who drew cards
@@ -563,13 +674,17 @@ public class GameController
         break;
       case CardType.Wild:
         _currentWildColor = ChooseWildColor();
-        Console.WriteLine($"Wild color chosen: {_currentWildColor}");
+        SetConsoleColor(GetColorFromEnum(_currentWildColor.Value));
+        Console.WriteLine($"🎨 Wild color chosen: {_currentWildColor}");
+        ResetConsoleColor();
 
         if (card.GetWildType() == WildType.WildDrawFour)
         {
           NextPlayer();
           var targetPlayer = GetCurrentPlayer();
-          Console.WriteLine($"{targetPlayer.GetName()} draws 4 cards and is skipped!");
+          SetConsoleColor(ConsoleColor.Red);
+          Console.WriteLine($"💥 {targetPlayer.GetName()} draws 4 cards and is skipped!");
+          ResetConsoleColor();
           for (int i = 0; i < 4; i++)
           {
             DrawCardFromDeck(targetPlayer);
@@ -664,11 +779,15 @@ public class GameController
     }
 
     // Default implementation
-    Console.WriteLine("Choose a color:");
+    SetConsoleColor(ConsoleColor.Cyan);
+    Console.WriteLine("🎨 Choose a color:");
+    ResetConsoleColor();
     var colors = (Color[])Enum.GetValues(typeof(Color));
     for (int i = 0; i < colors.Length; i++)
     {
-      Console.WriteLine($"{i + 1}. {colors[i]}");
+      SetConsoleColor(GetColorFromEnum(colors[i]));
+      Console.WriteLine($"{i + 1}. {GetColorEmoji(colors[i])} {colors[i]}");
+      ResetConsoleColor();
     }
 
     int choice;
@@ -728,14 +847,65 @@ public class GameController
     return _players.ToList();
   }
 
-  // Helper method for displaying player hand
+  // Helper methods for console colors
+  private void SetConsoleColor(ConsoleColor color)
+  {
+    Console.ForegroundColor = color;
+  }
+
+  private void ResetConsoleColor()
+  {
+    Console.ResetColor();
+  }
+
+  private ConsoleColor GetColorFromEnum(Color color)
+  {
+    return color switch
+    {
+      Color.Red => ConsoleColor.Red,
+      Color.Blue => ConsoleColor.Blue,
+      Color.Green => ConsoleColor.Green,
+      Color.Yellow => ConsoleColor.Yellow,
+      _ => ConsoleColor.White
+    };
+  }
+
+  private string GetColorEmoji(Color color)
+  {
+    return color switch
+    {
+      Color.Red => "🔴",
+      Color.Blue => "🔵",
+      Color.Green => "🟢",
+      Color.Yellow => "🟡",
+      _ => "⚫"
+    };
+  }
+
+  // Helper method for displaying player hand with colors
   private void DisplayPlayerHand(IPlayer player)
   {
     var hand = GetPlayerHand(player);
-    Console.WriteLine($"\n{player.GetName()}'s hand ({hand.Count} cards):");
+    SetConsoleColor(ConsoleColor.Cyan);
+    Console.WriteLine($"\n🎴 {player.GetName()}'s hand ({hand.Count} cards):");
+    ResetConsoleColor();
+
     for (int i = 0; i < hand.Count; i++)
     {
-      Console.WriteLine($"{i + 1}. {hand[i].GetDisplayText()}");
+      Console.Write($"{i + 1}. ");
+
+      var card = hand[i];
+      if (card.GetColor().HasValue)
+      {
+        SetConsoleColor(GetColorFromEnum(card.GetColor().Value));
+      }
+      else
+      {
+        SetConsoleColor(ConsoleColor.Magenta); // For wild cards
+      }
+
+      Console.WriteLine(card.GetDisplayText());
+      ResetConsoleColor();
     }
   }
 }
@@ -745,7 +915,13 @@ public class Program
 {
   public static void Main()
   {
-    Console.WriteLine("🎮 Welcome to UNO Game! 🎮\n");
+    Console.Clear();
+    SetConsoleColor(ConsoleColor.Yellow);
+    Console.WriteLine("🎮" + new string('=', 30) + "🎮");
+    Console.WriteLine("          WELCOME TO UNO GAME!");
+    Console.WriteLine("🎮" + new string('=', 30) + "🎮");
+    ResetConsoleColor();
+    Console.WriteLine();
 
     var gameController = new GameController();
 
@@ -758,17 +934,23 @@ public class Program
     };
 
     // Get number of players
-    Console.Write("Enter number of players (2-10): ");
+    SetConsoleColor(ConsoleColor.Cyan);
+    Console.Write("👥 Enter number of players (2-10): ");
+    ResetConsoleColor();
     int numPlayers;
     while (!int.TryParse(Console.ReadLine(), out numPlayers) || numPlayers < 2 || numPlayers > 10)
     {
-      Console.Write("Invalid input. Enter number of players (2-10): ");
+      SetConsoleColor(ConsoleColor.Red);
+      Console.Write("❌ Invalid input. Enter number of players (2-10): ");
+      ResetConsoleColor();
     }
 
     // Add players
     for (int i = 1; i <= numPlayers; i++)
     {
-      Console.Write($"Enter name for Player {i}: ");
+      SetConsoleColor(ConsoleColor.Green);
+      Console.Write($"🏷️ Enter name for Player {i}: ");
+      ResetConsoleColor();
       string name = Console.ReadLine() ?? $"Player {i}";
       gameController.AddPlayer(new Player(name));
     }
@@ -776,29 +958,75 @@ public class Program
     // Setup event handlers
     gameController.OnPlayerTurnChanged += (player) =>
     {
-      Console.WriteLine($"\nPress Enter when {player.GetName()} is ready to play...");
+      SetConsoleColor(ConsoleColor.Cyan);
+      Console.WriteLine($"\n⏳ Press Enter when {player.GetName()} is ready to play...");
+      ResetConsoleColor();
       Console.ReadLine();
     };
 
     gameController.OnCardPlayed += (player, card) =>
     {
-      Console.WriteLine($"{player.GetName()} played: {card.GetDisplayText()}");
+      Console.Write($"✅ {player.GetName()} played: ");
+      if (card.GetColor().HasValue)
+      {
+        Console.ForegroundColor = card.GetColor().Value switch
+        {
+          Color.Red => ConsoleColor.Red,
+          Color.Blue => ConsoleColor.Blue,
+          Color.Green => ConsoleColor.Green,
+          Color.Yellow => ConsoleColor.Yellow,
+          _ => ConsoleColor.White
+        };
+      }
+      else
+      {
+        Console.ForegroundColor = ConsoleColor.Magenta;
+      }
+      Console.WriteLine(card.GetDisplayText());
+      Console.ResetColor();
     };
 
     gameController.OnGameEnded += (winner) =>
     {
-      Console.WriteLine($"\nFinal hand sizes:");
+      Console.WriteLine($"\n📊 Final hand sizes:");
       foreach (var player in gameController.GetAllPlayers())
       {
-        Console.WriteLine($"{player.GetName()}: {gameController.GetPlayerHandSize(player)} cards");
+        var handSize = gameController.GetPlayerHandSize(player);
+        if (handSize == 0)
+        {
+          SetConsoleColor(ConsoleColor.Green);
+          Console.WriteLine($"🏆 {player.GetName()}: {handSize} cards (WINNER!)");
+          ResetConsoleColor();
+        }
+        else
+        {
+          Console.WriteLine($"📋 {player.GetName()}: {handSize} cards");
+        }
       }
     };
 
+    // Helper method for main program
+    static void SetConsoleColor(ConsoleColor color)
+    {
+      Console.ForegroundColor = color;
+    }
+
+    static void ResetConsoleColor()
+    {
+      Console.ResetColor();
+    }
+
     // Start the game
+    Console.WriteLine();
+    SetConsoleColor(ConsoleColor.Green);
+    Console.WriteLine("🚀 Starting UNO Game...");
+    ResetConsoleColor();
     gameController.StartGame();
 
-    Console.WriteLine("\nThanks for playing UNO! Press any key to exit...");
+    Console.WriteLine();
+    SetConsoleColor(ConsoleColor.Yellow);
+    Console.WriteLine("🎮 Thanks for playing UNO! Press any key to exit...");
+    ResetConsoleColor();
     Console.ReadKey();
   }
 }
-
