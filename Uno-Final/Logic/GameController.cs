@@ -12,15 +12,15 @@ public class GameController
   private Random _random;
 
   // Events
-  public Action<IPlayer> OnPlayerTurnChanged;
-  public Action<IPlayer, ICard> OnCardPlayed;
-  public Action<IPlayer> OnUnoViolation;
-  public Action<IPlayer> OnGameEnded;
+  public Action<IPlayer>? OnPlayerTurnChanged;
+  public Action<IPlayer, ICard>? OnCardPlayed;
+  public Action<IPlayer>? OnUnoViolation;
+  public Action<IPlayer>? OnGameEnded;
 
   // Delegates
-  public Func<IPlayer, ICard, List<ICard>, ICard> CardChooser;
-  public Func<Color> WildColorChooser;
-  public Func<IPlayer, bool> UnoCallChecker;
+  public Func<IPlayer, ICard, List<ICard>, ICard>? CardChooser;
+  public Func<Color>? WildColorChooser;
+  public Func<IPlayer, bool>? UnoCallChecker;
 
   public GameController()
   {
