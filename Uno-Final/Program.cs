@@ -6,9 +6,9 @@ class Program
   {
     Console.Clear();
     SetConsoleColor(ConsoleColor.Yellow);
-    Console.WriteLine("🎮" + new string('=', 30) + "🎮");
+    Console.WriteLine("🎮" + new string('=', 36) + "🎮");
     Console.WriteLine("          WELCOME TO UNO GAME!");
-    Console.WriteLine("🎮" + new string('=', 30) + "🎮");
+    Console.WriteLine("🎮" + new string('=', 36) + "🎮");
     ResetConsoleColor();
     Console.WriteLine();
 
@@ -58,7 +58,7 @@ class Program
       Console.Write($"✅ {player.GetName()} played: ");
       if (card.GetColor().HasValue)
       {
-        Console.ForegroundColor = card.GetColor().Value switch
+        Console.ForegroundColor = card.GetColor()!.Value switch
         {
           Color.Red => ConsoleColor.Red,
           Color.Blue => ConsoleColor.Blue,
