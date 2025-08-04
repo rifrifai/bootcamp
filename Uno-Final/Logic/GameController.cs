@@ -1,210 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-// Enumerations
-public enum Color
-{
-  Red,
-  Blue,
-  Green,
-  Yellow
-}
-
-public enum CardType
-{
-  Number,
-  Action,
-  Wild
-}
-
-public enum ActionType
-{
-  Skip,
-  Reverse,
-  DrawTwo
-}
-
-public enum WildType
-{
-  Wild,
-  WildDrawFour
-}
-
-public enum Number
-{
-  Zero,
-  One,
-  Two,
-  Three,
-  Four,
-  Five,
-  Six,
-  Seven,
-  Eight,
-  Nine
-}
-
-// Interfaces
-public interface ICard
-{
-  CardType GetCardType();
-  Color? GetColor();
-  Number? GetNumber();
-  ActionType? GetActionType();
-  WildType? GetWildType();
-  string GetDisplayText();
-  void SetCardType(CardType type);
-  void SetColor(Color? color);
-  void SetNumber(Number? number);
-  void SetActionType(ActionType? actionType);
-  void SetWildType(WildType? wildType);
-}
-
-public interface IPlayer
-{
-  string GetName();
-  void SetName(string name);
-}
-
-public interface IDeck
-{
-  List<ICard> GetCards();
-  ICard GetCardAt(int index);
-  void SetCards(List<ICard> cards);
-  void SetCardAt(int index, ICard card);
-}
-
-public interface IDiscardPile
-{
-  List<ICard> GetCards();
-  ICard GetCardAt(int index);
-  void SetCards(List<ICard> cards);
-  void SetCardAt(int index, ICard card);
-}
-
-// Implementations
-public class Card : ICard
-{
-  private CardType _type;
-  private Color? _color;
-  private Number? _number;
-  private ActionType? _actionType;
-  private WildType? _wildType;
-
-  public Card(CardType type, Color? color = null, Number? number = null, ActionType? actionType = null, WildType? wildType = null)
-  {
-    _type = type;
-    _color = color;
-    _number = number;
-    _actionType = actionType;
-    _wildType = wildType;
-  }
-
-  public CardType GetCardType() => _type;
-  public Color? GetColor() => _color;
-  public Number? GetNumber() => _number;
-  public ActionType? GetActionType() => _actionType;
-  public WildType? GetWildType() => _wildType;
-
-  public void SetCardType(CardType type) => _type = type;
-  public void SetColor(Color? color) => _color = color;
-  public void SetNumber(Number? number) => _number = number;
-  public void SetActionType(ActionType? actionType) => _actionType = actionType;
-  public void SetWildType(WildType? wildType) => _wildType = wildType;
-
-  public string GetDisplayText()
-  {
-    switch (_type)
-    {
-      case CardType.Number:
-        return $"{GetColorEmoji(_color)} {_color} {_number}";
-      case CardType.Action:
-        return $"{GetColorEmoji(_color)} {_color} {GetActionEmoji(_actionType)} {_actionType}";
-      case CardType.Wild:
-        return $"🌈 {_wildType}";
-      default:
-        return "❓ Unknown Card";
-    }
-  }
-
-  private string GetColorEmoji(Color? color)
-  {
-    return color switch
-    {
-      Color.Red => "🔴",
-      Color.Blue => "🔵",
-      Color.Green => "🟢",
-      Color.Yellow => "🟡",
-      _ => "⚫"
-    };
-  }
-  // private string GetColorEmoji(Color color)
-  //     {
-  //         return color switch
-  //         {
-  //             Color.Red => "🔴",
-  //             Color.Blue => "🔵",
-  //             Color.Green => "🟢",
-  //             Color.Yellow => "🟡",
-  //             _ => "⚫"
-  //         };
-  //     }
-
-  private string GetActionEmoji(ActionType? action)
-  {
-    return action switch
-    {
-      ActionType.Skip => "🚫",
-      ActionType.Reverse => "🔄",
-      ActionType.DrawTwo => "📥",
-      _ => "❓"
-    };
-  }
-}
-
-public class Player : IPlayer
-{
-  private string _name;
-
-  public Player(string name)
-  {
-    _name = name;
-  }
-
-  public string GetName() => _name;
-  public void SetName(string name) => _name = name;
-}
-
-public class Deck : IDeck
-{
-  private List<ICard> _cards;
-
-  public Deck()
-  {
-    _cards = new List<ICard>();
-  }
-
-  public List<ICard> GetCards() => _cards;
-  public void SetCards(List<ICard> cards) => _cards = cards;
-  public ICard GetCardAt(int index) => _cards[index];
-  public void SetCardAt(int index, ICard card) => _cards[index] = card;
-}
-
-public class DiscardPile : IDiscardPile
-{
-  private List<ICard> _cards;
-
-  public DiscardPile()
-  {
-    _cards = new List<ICard>();
-  }
-
-  public List<ICard> GetCards() => _cards;
-  public void SetCards(List<ICard> cards) => _cards = cards;
-  public ICard GetCardAt(int index) => _cards[index];
-  public void SetCardAt(int index, ICard card) => _cards[index] = card;
-}
+namespace Uno;
 
 public class GameController
 {
@@ -315,34 +109,6 @@ public class GameController
   {
     while (!IsGameOver())
     {
-      if (IsGameOver())
-      {
-        var winner = GetWinner();
-        Console.WriteLine("\n" + string.Concat(Enumerable.Repeat("🎉", 30)));
-        SetConsoleColor(ConsoleColor.Green);
-        Console.WriteLine($"🏆 {winner?.GetName()} WINS THE GAME! 🏆");
-        ResetConsoleColor();
-        Console.WriteLine(string.Concat(Enumerable.Repeat("🎉", 30)));
-        OnGameEnded?.Invoke(winner);
-
-        // Display final hand sizes
-        Console.WriteLine($"\n📊 Final hand sizes:");
-        foreach (var player in GetAllPlayers())
-        {
-          var handSize = GetPlayerHandSize(player);
-          if (handSize == 0)
-          {
-            SetConsoleColor(ConsoleColor.Green);
-            Console.WriteLine($"🏆 {player.GetName()}: {handSize} cards (WINNER!)");
-            ResetConsoleColor();
-          }
-          else
-          {
-            Console.WriteLine($"📋 {player.GetName()}: {handSize} cards");
-          }
-        }
-        return;
-      }
       var currentPlayer = GetCurrentPlayer();
       OnPlayerTurnChanged?.Invoke(currentPlayer);
 
@@ -357,7 +123,7 @@ public class GameController
       Console.Write("🎴 Top card: ");
       if (topCard?.GetColor().HasValue == true)
       {
-        SetConsoleColor(GetColorFromEnum(topCard.GetColor().Value));
+        SetConsoleColor(GetColorFromEnum(topCard.GetColor()!.Value));
       }
       else
       {
@@ -375,7 +141,7 @@ public class GameController
 
       DisplayPlayerHand(currentPlayer);
 
-      var playableCards = GetPlayableCardsFromPlayer(currentPlayer, GetTopDiscardCard());
+      var playableCards = GetPlayableCardsFromPlayer(currentPlayer, GetTopDiscardCard()!);
 
       if (playableCards.Count == 0)
       {
@@ -386,7 +152,7 @@ public class GameController
         Console.Write("📤 Drew: ");
         if (drawnCard.GetColor().HasValue)
         {
-          SetConsoleColor(GetColorFromEnum(drawnCard.GetColor().Value));
+          SetConsoleColor(GetColorFromEnum(drawnCard.GetColor()!.Value));
         }
         else
         {
@@ -395,7 +161,7 @@ public class GameController
         Console.WriteLine(drawnCard.GetDisplayText());
         ResetConsoleColor();
 
-        playableCards = GetPlayableCardsFromPlayer(currentPlayer, GetTopDiscardCard());
+        playableCards = GetPlayableCardsFromPlayer(currentPlayer, GetTopDiscardCard()!);
         if (playableCards.Count == 0)
         {
           SetConsoleColor(ConsoleColor.Yellow);
@@ -406,7 +172,7 @@ public class GameController
         }
       }
 
-      var chosenCard = ChooseCard(currentPlayer, GetTopDiscardCard(), playableCards);
+      var chosenCard = ChooseCard(currentPlayer, GetTopDiscardCard()!, playableCards);
 
       if (PlayCard(currentPlayer, chosenCard))
       {
@@ -448,6 +214,35 @@ public class GameController
         }
       }
     }
+    if (IsGameOver())
+    {
+      var winner = GetWinner();
+      Console.WriteLine("\n" + string.Concat(Enumerable.Repeat("🎉", 30)));
+      SetConsoleColor(ConsoleColor.Green);
+      Console.WriteLine($"🏆 {winner?.GetName()} WINS THE GAME! 🏆");
+      ResetConsoleColor();
+      Console.WriteLine(string.Concat(Enumerable.Repeat("🎉", 30)));
+      OnGameEnded?.Invoke(winner!);
+
+      // Display final hand sizes
+      Console.WriteLine($"\n📊 Final hand sizes:");
+      foreach (var player in GetAllPlayers())
+      {
+        var handSize = GetPlayerHandSize(player);
+        if (handSize == 0)
+        {
+          SetConsoleColor(ConsoleColor.Green);
+          Console.WriteLine($"🏆 {player.GetName()}: {handSize} cards (WINNER!)");
+          ResetConsoleColor();
+        }
+        else
+        {
+          Console.WriteLine($"📋 {player.GetName()}: {handSize} cards");
+        }
+      }
+      return;
+    }
+
   }
 
   public void NextPlayer()
@@ -516,7 +311,7 @@ public class GameController
   // Card Management Methods
   public bool PlayCard(IPlayer player, ICard card)
   {
-    if (!PlayerHasCard(player, card) || !CanPlayCard(card, GetTopDiscardCard()))
+    if (!PlayerHasCard(player, card) || !CanPlayCard(card, GetTopDiscardCard()!))
     {
       return false;
     }
@@ -614,7 +409,7 @@ public class GameController
       var card = playableCards[i];
       if (card.GetColor().HasValue)
       {
-        SetConsoleColor(GetColorFromEnum(card.GetColor().Value));
+        SetConsoleColor(GetColorFromEnum(card.GetColor()!.Value));
       }
       else
       {
@@ -738,14 +533,14 @@ public class GameController
     if (card.GetCardType() == CardType.Number && topCard.GetCardType() == CardType.Number)
     {
       return card.GetNumber().HasValue && topCard.GetNumber().HasValue &&
-             card.GetNumber().Value == topCard.GetNumber().Value;
+             card.GetNumber()!.Value == topCard.GetNumber()!.Value;
     }
 
     // Same action (Fixed: Added null checks)
     if (card.GetCardType() == CardType.Action && topCard.GetCardType() == CardType.Action)
     {
       return card.GetActionType().HasValue && topCard.GetActionType().HasValue &&
-             card.GetActionType().Value == topCard.GetActionType().Value;
+             card.GetActionType()!.Value == topCard.GetActionType()!.Value;
     }
 
     return false;
@@ -815,7 +610,7 @@ public class GameController
     }
 
     _deck.SetCards(cards);
-    _discardPile.SetCards(new List<ICard> { topCard });
+    _discardPile.SetCards(new List<ICard> { topCard! });
     ShuffleDeck();
 
     Console.WriteLine("Deck was empty. Recycled discard pile.");
@@ -897,7 +692,7 @@ public class GameController
       var card = hand[i];
       if (card.GetColor().HasValue)
       {
-        SetConsoleColor(GetColorFromEnum(card.GetColor().Value));
+        SetConsoleColor(GetColorFromEnum(card.GetColor()!.Value));
       }
       else
       {
@@ -909,125 +704,3 @@ public class GameController
     }
   }
 }
-
-// Main Program
-public class Program
-{
-  public static void Main()
-  {
-    Console.Clear();
-    SetConsoleColor(ConsoleColor.Yellow);
-    Console.WriteLine("🎮" + new string('=', 30) + "🎮");
-    Console.WriteLine("          WELCOME TO UNO GAME!");
-    Console.WriteLine("🎮" + new string('=', 30) + "🎮");
-    ResetConsoleColor();
-    Console.WriteLine();
-
-    var gameController = new GameController();
-
-    // Setup delegates for interactive gameplay
-    gameController.UnoCallChecker = (player) =>
-    {
-      Console.WriteLine($"{player.GetName()}, do you want to call UNO? (y/n):");
-      var input = Console.ReadLine()?.ToLower();
-      return input == "y" || input == "yes";
-    };
-
-    // Get number of players
-    SetConsoleColor(ConsoleColor.Cyan);
-    Console.Write("👥 Enter number of players (2-10): ");
-    ResetConsoleColor();
-    int numPlayers;
-    while (!int.TryParse(Console.ReadLine(), out numPlayers) || numPlayers < 2 || numPlayers > 10)
-    {
-      SetConsoleColor(ConsoleColor.Red);
-      Console.Write("❌ Invalid input. Enter number of players (2-10): ");
-      ResetConsoleColor();
-    }
-
-    // Add players
-    for (int i = 1; i <= numPlayers; i++)
-    {
-      SetConsoleColor(ConsoleColor.Green);
-      Console.Write($"🏷️ Enter name for Player {i}: ");
-      ResetConsoleColor();
-      string name = Console.ReadLine() ?? $"Player {i}";
-      gameController.AddPlayer(new Player(name));
-    }
-
-    // Setup event handlers
-    gameController.OnPlayerTurnChanged += (player) =>
-    {
-      SetConsoleColor(ConsoleColor.Cyan);
-      Console.WriteLine($"\n⏳ Press Enter when {player.GetName()} is ready to play...");
-      ResetConsoleColor();
-      Console.ReadLine();
-    };
-
-    gameController.OnCardPlayed += (player, card) =>
-    {
-      Console.Write($"✅ {player.GetName()} played: ");
-      if (card.GetColor().HasValue)
-      {
-        Console.ForegroundColor = card.GetColor().Value switch
-        {
-          Color.Red => ConsoleColor.Red,
-          Color.Blue => ConsoleColor.Blue,
-          Color.Green => ConsoleColor.Green,
-          Color.Yellow => ConsoleColor.Yellow,
-          _ => ConsoleColor.White
-        };
-      }
-      else
-      {
-        Console.ForegroundColor = ConsoleColor.Magenta;
-      }
-      Console.WriteLine(card.GetDisplayText());
-      Console.ResetColor();
-    };
-
-    gameController.OnGameEnded += (winner) =>
-    {
-      Console.WriteLine($"\n📊 Final hand sizes:");
-      foreach (var player in gameController.GetAllPlayers())
-      {
-        var handSize = gameController.GetPlayerHandSize(player);
-        if (handSize == 0)
-        {
-          SetConsoleColor(ConsoleColor.Green);
-          Console.WriteLine($"🏆 {player.GetName()}: {handSize} cards (WINNER!)");
-          ResetConsoleColor();
-        }
-        else
-        {
-          Console.WriteLine($"📋 {player.GetName()}: {handSize} cards");
-        }
-      }
-    };
-
-    // Helper method for main program
-    static void SetConsoleColor(ConsoleColor color)
-    {
-      Console.ForegroundColor = color;
-    }
-
-    static void ResetConsoleColor()
-    {
-      Console.ResetColor();
-    }
-
-    // Start the game
-    Console.WriteLine();
-    SetConsoleColor(ConsoleColor.Green);
-    Console.WriteLine("🚀 Starting UNO Game...");
-    ResetConsoleColor();
-    gameController.StartGame();
-
-    Console.WriteLine();
-    SetConsoleColor(ConsoleColor.Yellow);
-    Console.WriteLine("🎮 Thanks for playing UNO! Press any key to exit...");
-    ResetConsoleColor();
-    Console.ReadKey();
-  }
-}
-
