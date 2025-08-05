@@ -34,6 +34,7 @@ class Program
     DemoFileCreation(filePath);
     DemoFileWriting(filePath, content);
     DemoFileReading(filePath);
+    DemoFileModesAndAccess();
 
     // clean up
     if (File.Exists(filePath))
@@ -124,6 +125,54 @@ class Program
     catch (Exception ex)
     {
       Console.WriteLine($"❌ Error reading file: {ex.Message}");
+    }
+  }
+
+  // demo different FileMode, FileAccess, and FileShare options
+  static void DemoFileModesAndAccess()
+  {
+    Console.WriteLine("\nFileMode, FileAccess & FileShare Demo:");
+
+    string testFile = "modes_dmeo.txt";
+
+    try
+    {
+      // FileMode.CreateNew - fails if file exists
+      Console.WriteLine("Testing FileMode options: ");
+
+      using (var fs1 = new FileStream(testFile, FileMode.CreateNew))
+      {
+        byte[] data = Encoding.UTF8.GetBytes("CreateNew mode test");
+        fs1.Write(data, 0, data.Length);
+        Console.WriteLine("✓ FileMode.CreateNew - Created new file");
+      }
+
+      // FileMode.Open - opens existing file
+      using (var fs2 = new FileStream(testFile, FileMode.Open, FileAccess.Read))
+      {
+        Console.WriteLine("✓ FileMode.Open - Opened existing file for reading");
+      }
+
+      // FileMode.Append - opens for writing at end
+      using (var fs3 = new FileStream(testFile, FileMode.Append))
+      {
+        byte[] appendData = Encoding.UTF8.GetBytes(" + appended text");
+        fs3.Write(appendData, 0, appendData.Length);
+        Console.WriteLine("✓ FileMode.Append - Appended data to file");
+      }
+
+      // FileMode.Truncate - opens existing file and truncates to 0 bytes
+      using (var fs4 = new FileStream(testFile, FileMode.Truncate))
+      {
+        Console.WriteLine("✓ FileMode.Truncate - Truncated file to 0 bytes");
+      }
+
+      // clean up
+      File.Delete(testFile);
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"❌ Error in FileMode demo: {ex.Message}");
     }
   }
 
