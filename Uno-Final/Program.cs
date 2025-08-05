@@ -6,56 +6,56 @@ class Program
   {
     Console.Clear();
     SetConsoleColor(ConsoleColor.Yellow);
-    Console.WriteLine("🎮" + new string('=', 36) + "🎮");
-    Console.WriteLine("          WELCOME TO UNO GAME!");
-    Console.WriteLine("🎮" + new string('=', 36) + "🎮");
+    Console.WriteLine("🎮" + new string('=', 40) + "🎮");
+    Console.WriteLine("      SELAMAT DATANG DI PERMAINAN UNO!");
+    Console.WriteLine("🎮" + new string('=', 40) + "🎮");
     ResetConsoleColor();
     Console.WriteLine();
 
     var gameController = new GameController();
 
-    // setup delegates for interactive gameplay
+    // setup delegates untuk interaktif gameplay
     gameController.UnoCallChecker = (player) =>
     {
-      Console.WriteLine($"{player.GetName()}, do you want to call UNO? (y/n):");
+      Console.WriteLine($"{player.GetName()}, ingin memanggil UNO? (y/n):");
       var input = Console.ReadLine()?.ToLower();
       return input == "y" || input == "yes";
     };
 
-    // get number of players
+    // ambil jumlah pemain
     SetConsoleColor(ConsoleColor.Cyan);
-    Console.Write("👥 Enter number of players (2-10): ");
+    Console.Write("👥 Masukkan jumlah pemain (2-10): ");
     ResetConsoleColor();
     int numPlayers;
     while (!int.TryParse(Console.ReadLine(), out numPlayers) || numPlayers < 2 || numPlayers > 10)
     {
       SetConsoleColor(ConsoleColor.Red);
-      Console.Write("❌ Invalid input. Enter number of players (2-10): ");
+      Console.Write("❌ Invalid input. Masukkan jumlah pemain (2-10): ");
       ResetConsoleColor();
     }
 
-    // Add players
+    // menambahkan pemain
     for (int i = 1; i <= numPlayers; i++)
     {
       SetConsoleColor(ConsoleColor.Green);
-      Console.Write($"🏷️ Enter name for Player {i}: ");
+      Console.Write($"🏷️  Masukkan nama pemain {i}: ");
       ResetConsoleColor();
-      string name = Console.ReadLine() ?? $"Player {i}";
+      string name = Console.ReadLine() ?? $"Pemain {i}";
       gameController.AddPlayer(new Player(name));
     }
 
-    // Setup event handlers
+    // setup event handlers
     gameController.OnPlayerTurnChanged += (player) =>
     {
       SetConsoleColor(ConsoleColor.Cyan);
-      Console.WriteLine($"\n⏳ Press Enter when {player.GetName()} is ready to play...");
+      Console.WriteLine($"\n⏳ Tekan Enter ketika {player.GetName()} bersiap untuk bermain...");
       ResetConsoleColor();
       Console.ReadLine();
     };
 
     gameController.OnCardPlayed += (player, card) =>
     {
-      Console.Write($"✅ {player.GetName()} played: ");
+      Console.Write($"✅ {player.GetName()} bermain: ");
       if (card.GetColor().HasValue)
       {
         Console.ForegroundColor = card.GetColor()!.Value switch
@@ -77,24 +77,24 @@ class Program
 
     gameController.OnGameEnded += (winner) =>
     {
-      Console.WriteLine($"\n📊 Final hand sizes:");
+      Console.WriteLine($"\n📊 Kartu di tangan diakhir:");
       foreach (var player in gameController.GetAllPlayers())
       {
         var handSize = gameController.GetPlayerHandSize(player);
         if (handSize == 0)
         {
           SetConsoleColor(ConsoleColor.Green);
-          Console.WriteLine($"🏆 {player.GetName()}: {handSize} cards (WINNER!)");
+          Console.WriteLine($"🏆 {player.GetName()}: {handSize} kartu (WINNER!)");
           ResetConsoleColor();
         }
         else
         {
-          Console.WriteLine($"📋 {player.GetName()}: {handSize} cards");
+          Console.WriteLine($"📋 {player.GetName()}: {handSize} kartu");
         }
       }
     };
 
-    // Helper method for main program
+    // method pembantu for main program
     static void SetConsoleColor(ConsoleColor color)
     {
       Console.ForegroundColor = color;
@@ -105,16 +105,16 @@ class Program
       Console.ResetColor();
     }
 
-    // Start the game
+    // start the game
     Console.WriteLine();
     SetConsoleColor(ConsoleColor.Green);
-    Console.WriteLine("🚀 Starting UNO Game...");
+    Console.WriteLine("🚀 Memulai permainan UNO...");
     ResetConsoleColor();
     gameController.StartGame();
 
     Console.WriteLine();
     SetConsoleColor(ConsoleColor.Yellow);
-    Console.WriteLine("🎮 Thanks for playing UNO! Press any key to exit...");
+    Console.WriteLine("🎮 Terima kasih telah bermain UNO! HAVE A GOOOD DAYY...");
     ResetConsoleColor();
     Console.ReadKey();
   }
