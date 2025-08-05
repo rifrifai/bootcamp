@@ -13,6 +13,7 @@ class Program
     await RunFileStreamDemo();
     await RunMemoryStreamDemo();
     await RunBufferedStreamDemo();
+    await RunTextAdapterDemo();
 
     Console.WriteLine("\n=== All demos completed! ===");
   }
@@ -155,6 +156,64 @@ class Program
     catch (Exception ex)
     {
       Console.WriteLine($"❌ Error in BufferedStream demo: {ex.Message}");
+    }
+    Console.WriteLine();
+  }
+
+  // Text adapters demo - StreamReader and StreamWriter
+  static async Task RunTextAdapterDemo()
+  {
+    Console.WriteLine("4. Text Adapters Demo (StreamReader/StreamWriter)");
+    Console.WriteLine("------------------------------------------------");
+
+    string filePath = "text_demo.txt";
+
+    try
+    {
+      // writing text using StreamWriter
+      using (var writer = new StreamWriter(filePath))
+      {
+        await writer.WriteLineAsync("First line of text");
+        await writer.WriteLineAsync("Second line with special chars: äöü");
+        await writer.WriteLineAsync("Third line with numbers: 12345");
+        Console.WriteLine("✓ Written multiple lines using StreamWriter");
+      }
+
+      // reading text using StreamReader
+      using (var reader = new StreamReader(filePath))
+      {
+        Console.WriteLine("Reading line by line: ");
+        string line;
+        int lineNumber = 1;
+
+        while ((line = await reader.ReadLineAsync()) != null)
+        {
+          Console.WriteLine($"  Line {lineNumber}: {line}");
+          lineNumber++;
+        }
+      }
+
+      // Demonstrate StringReader/StringWriter for in-memory text operations
+      using (var stringWriter = new StringWriter())
+      {
+        await stringWriter.WriteLineAsync("This is in-memory text");
+        await stringWriter.WriteLineAsync("No file system involved!");
+
+        string inMemoryText = stringWriter.ToString();
+        Console.WriteLine($"✓ StringWriter result: {inMemoryText.Replace('\n', ' ').Replace('\r', ' ')}");
+
+        using (var stringReader = new StringReader(inMemoryText))
+        {
+          string? firstLine = await stringReader.ReadLineAsync();
+          Console.WriteLine($"✓ StringReader first line: {firstLine ?? "null"}");
+        }
+      }
+
+      File.Delete(filePath);
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"❌ Error in Text Adapters demo: {ex.Message}");
     }
     Console.WriteLine();
   }
