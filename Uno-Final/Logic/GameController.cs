@@ -287,14 +287,6 @@ public class GameController
     return _playerHands.ContainsKey(player) ? _playerHands[player] : new List<ICard>();
   }
 
-  public void ClearPlayerHand(IPlayer player)
-  {
-    if (_playerHands.ContainsKey(player))
-    {
-      _playerHands[player].Clear();
-    }
-  }
-
   // Card Management Methods
   public bool PlayCard(IPlayer player, ICard card)
   {
@@ -360,16 +352,6 @@ public class GameController
   {
     var cards = _discardPile.GetCards();
     return cards.Count > 0 ? cards.Last() : null;
-  }
-
-  public int GetDiscardPileCardCount()
-  {
-    return _discardPile.GetCards().Count;
-  }
-
-  public bool IsDiscardPileEmpty()
-  {
-    return _discardPile.GetCards().Count == 0;
   }
 
   public List<ICard> GetPlayableCardsFromPlayer(IPlayer player, ICard topCard)
@@ -597,21 +579,6 @@ public class GameController
   public IPlayer GetCurrentPlayer()
   {
     return _players[_currentPlayerIndex];
-  }
-
-  public List<Color> GetValidColors()
-  {
-    return ((Color[])Enum.GetValues(typeof(Color))).ToList();
-  }
-
-  public IPlayer? GetPlayerByName(string name)
-  {
-    return _players.FirstOrDefault(p => p.GetName().Equals(name, StringComparison.OrdinalIgnoreCase));
-  }
-
-  public List<int> GetPlayerHandSizes()
-  {
-    return _players.Select(GetPlayerHandSize).ToList();
   }
 
   public List<IPlayer> GetAllPlayers()

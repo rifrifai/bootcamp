@@ -14,7 +14,7 @@ class Program
 
     var gameController = new GameController();
 
-    // setup delegates untuk interaktif gameplay
+    // setup delegates
     gameController.UnoCallChecker = (player) =>
     {
       Console.WriteLine($"{player.GetName()}, ingin memanggil UNO? (y/n):");
@@ -22,7 +22,6 @@ class Program
       return input == "y" || input == "yes";
     };
 
-    // ambil jumlah pemain
     SetConsoleColor(ConsoleColor.Cyan);
     Console.Write("👥 Masukkan jumlah pemain (2-10): ");
     ResetConsoleColor();
@@ -34,7 +33,6 @@ class Program
       ResetConsoleColor();
     }
 
-    // menambahkan pemain
     for (int i = 1; i <= numPlayers; i++)
     {
       SetConsoleColor(ConsoleColor.Green);
@@ -44,7 +42,7 @@ class Program
       gameController.AddPlayer(new Player(name));
     }
 
-    // setup event handlers
+    // setup event
     gameController.OnPlayerTurnChanged += (player) =>
     {
       SetConsoleColor(ConsoleColor.Cyan);
@@ -94,7 +92,6 @@ class Program
       }
     };
 
-    // method pembantu for main program
     static void SetConsoleColor(ConsoleColor color)
     {
       Console.ForegroundColor = color;
@@ -105,7 +102,6 @@ class Program
       Console.ResetColor();
     }
 
-    // start the game
     Console.WriteLine();
     SetConsoleColor(ConsoleColor.Green);
     Console.WriteLine("🚀 Memulai permainan UNO...");
