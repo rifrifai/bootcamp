@@ -1,9 +1,10 @@
 
 revisi game Uno:
--
--
--
--
+- GC hanya menerima inject, contructor dari luar
+- wl di UI, not GC
+- enums terpisah
+- Func dihapus, Action only
+- UI dibikin class/display di inject dari GC;
 
 
 revisi class diagram 2:
