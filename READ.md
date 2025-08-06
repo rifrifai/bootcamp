@@ -122,3 +122,30 @@ if (\_playerHands.ContainsKey(player))
 \_playerHands[player].Clear();
 }
 }
+
+baris 320
+public void AddCardToDeck(ICard card)
+{
+\_deck.GetCards().Add(card);
+}
+
+public int GetDeckCardCount()
+{
+return \_deck.GetCards().Count;
+}
+
+baris 451
+public bool CallUno(IPlayer player)
+{
+return GetPlayerHandSize(player) == 1;
+}
+
+public bool CheckUnoViolation(IPlayer player)
+{
+return GetPlayerHandSize(player) == 1;
+}
+
+public bool ValidateCard(ICard card)
+{
+return card != null;
+}

@@ -318,16 +318,6 @@ public class GameController
     return card;
   }
 
-  public void AddCardToDeck(ICard card)
-  {
-    _deck.GetCards().Add(card);
-  }
-
-  public int GetDeckCardCount()
-  {
-    return _deck.GetCards().Count;
-  }
-
   public bool IsDeckEmpty()
   {
     return _deck.GetCards().Count == 0;
@@ -458,26 +448,12 @@ public class GameController
   }
 
   // rules
-  public bool CallUno(IPlayer player)
-  {
-    return GetPlayerHandSize(player) == 1;
-  }
-
-  public bool CheckUnoViolation(IPlayer player)
-  {
-    return GetPlayerHandSize(player) == 1;
-  }
-
   public void PenalizePlayer(IPlayer player)
   {
     DrawCardFromDeck(player);
     DrawCardFromDeck(player);
   }
 
-  public bool ValidateCard(ICard card)
-  {
-    return card != null;
-  }
 
   public bool CanPlayCard(ICard card, ICard topCard)
   {
