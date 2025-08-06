@@ -11,13 +11,11 @@ public class GameController
   private Color? _currentWildColor;
   private Random _random;
 
-  // events
   public Action<IPlayer>? OnPlayerTurnChanged;
   public Action<IPlayer, ICard>? OnCardPlayed;
   public Action<IPlayer>? OnUnoViolation;
   public Action<IPlayer>? OnGameEnded;
 
-  // delegates
   public Func<IPlayer, ICard, List<ICard>, ICard>? CardChooser;
   public Func<Color>? WildColorChooser;
   public Func<IPlayer, bool>? UnoCallChecker;
@@ -33,7 +31,6 @@ public class GameController
     _random = new Random();
   }
 
-  // flow game methods
   public void StartGame()
   {
     if (_players.Count < 2)
@@ -46,14 +43,12 @@ public class GameController
     ShuffleDeck();
     DealCardsToPlayers();
 
-    // tempatkan kartu pertama di discard pile
     var firstCard = _deck.GetCards().First();
     _deck.GetCards().RemoveAt(0);
     _discardPile.GetCards().Add(firstCard);
 
     Console.WriteLine($"Game dimulai! Kartu pertama: {firstCard.GetDisplayText()}");
 
-    // menangani kartu pertama wild
     if (firstCard.GetCardType() == CardType.Wild)
     {
       _currentWildColor = ChooseWildColor();
@@ -67,13 +62,10 @@ public class GameController
   {
     var cards = new List<ICard>();
 
-    // kartu angka (0-9 untuk setiap warna)
     foreach (Color color in Enum.GetValues(typeof(Color)))
     {
-      // 1 kartu 0 per warna
       cards.Add(new Card(CardType.Number, color, Number.Zero));
 
-      // 2 dari setiap angka 1-9 per warna
       for (int i = 1; i <= 9; i++)
       {
         var number = (Number)i;
@@ -81,7 +73,6 @@ public class GameController
         cards.Add(new Card(CardType.Number, color, number));
       }
 
-      // kartu aksi (2 dari setiap aksi per warna)
       foreach (ActionType action in Enum.GetValues(typeof(ActionType)))
       {
         cards.Add(new Card(CardType.Action, color, actionType: action));
@@ -89,7 +80,6 @@ public class GameController
       }
     }
 
-    // kartu wild (4 dari setiap wild)
     for (int i = 0; i < 4; i++)
     {
       cards.Add(new Card(CardType.Wild, wildType: WildType.Wild));
@@ -178,7 +168,6 @@ public class GameController
       {
         OnCardPlayed?.Invoke(currentPlayer, chosenCard);
 
-        // mengecek pemanggilan UNO
         if (GetPlayerHandSize(currentPlayer) == 1)
         {
           var calledUno = UnoCallChecker?.Invoke(currentPlayer) ?? false;
@@ -200,7 +189,6 @@ public class GameController
 
         ExecuteCardEffect(chosenCard);
 
-        // hanya memanggil NextPlayer jika ExecuteCardEffect tidak menangani kemajuan giliran
         if (chosenCard.GetCardType() != CardType.Action ||
             (chosenCard.GetActionType() != ActionType.Skip &&
              chosenCard.GetActionType() != ActionType.DrawTwo &&
@@ -224,7 +212,6 @@ public class GameController
       Console.WriteLine(string.Concat(Enumerable.Repeat("🎉", 20)));
       OnGameEnded?.Invoke(winner!);
 
-      // menampilkan kartu terakhir ditangan
       Console.WriteLine($"\n📊 Kartu di tangan diakhir:");
       foreach (var player in GetAllPlayers())
       {
@@ -316,7 +303,6 @@ public class GameController
       return false;
     }
 
-    // Atur ulang warna wild ketika kartu bukan wild dimainkan
     if (card.GetCardType() != CardType.Wild)
     {
       _currentWildColor = null;
@@ -399,7 +385,6 @@ public class GameController
       return CardChooser(player, topCard, playableCards);
     }
 
-    // default implementation - biarkan player memilih
     SetConsoleColor(ConsoleColor.Yellow);
     Console.WriteLine("🎯 Memilih kartu untuk bermain:");
     ResetConsoleColor();
@@ -441,7 +426,7 @@ public class GameController
             SetConsoleColor(ConsoleColor.Red);
             Console.WriteLine($"🚫 {skippedPlayer.GetName()} di skip!");
             ResetConsoleColor();
-            NextPlayer(); // pindah ke pemain setelah pemain yang di skip
+            NextPlayer();
             return;
           case ActionType.Reverse:
             SetConsoleColor(ConsoleColor.Magenta);
@@ -450,9 +435,8 @@ public class GameController
             ReverseDirection();
             if (_players.Count == 2)
             {
-              // untuk 2 pemain, reverse bersifat seperti skip
               Console.WriteLine("Kartu reverse bersifat skip, silahkan bermain lagi!");
-              return; // jangan panggil NextPlayer() lagi di dalam GameLoop
+              return;
             }
             break;
           case ActionType.DrawTwo:
@@ -484,14 +468,14 @@ public class GameController
           {
             DrawCardFromDeck(targetPlayer);
           }
-          NextPlayer(); // melewati pemain yang mengambil kartu
+          NextPlayer();
           return;
         }
         break;
     }
   }
 
-  // Aturan bermain
+  // rules
   public bool CallUno(IPlayer player)
   {
     return GetPlayerHandSize(player) == 1;
@@ -517,26 +501,21 @@ public class GameController
   {
     if (topCard == null) return true;
 
-    // kartu wild selalu bisa dimainkan
     if (card.GetCardType() == CardType.Wild) return true;
 
-    // cek apakah ada warna wild saat ini
     if (_currentWildColor.HasValue)
     {
       return card.GetColor() == _currentWildColor.Value;
     }
 
-    // warna sama
     if (card.GetColor() == topCard.GetColor()) return true;
 
-    // angka sama (null checks)
     if (card.GetCardType() == CardType.Number && topCard.GetCardType() == CardType.Number)
     {
       return card.GetNumber().HasValue && topCard.GetNumber().HasValue &&
              card.GetNumber()!.Value == topCard.GetNumber()!.Value;
     }
 
-    // aksi sama (null checks)
     if (card.GetCardType() == CardType.Action && topCard.GetCardType() == CardType.Action)
     {
       return card.GetActionType().HasValue && topCard.GetActionType().HasValue &&
@@ -546,7 +525,6 @@ public class GameController
     return false;
   }
 
-  // pengaturn/utilitas
   public void DealCardsToPlayers()
   {
     const int cardsPerPlayer = 7;
@@ -600,7 +578,6 @@ public class GameController
     var topCard = GetTopDiscardCard();
     var cards = _discardPile.GetCards().Take(_discardPile.GetCards().Count - 1).ToList();
 
-    // atur ulang warna wild pada kartu-kartu yang dikembalikan
     foreach (var card in cards)
     {
       if (card.GetCardType() == CardType.Wild)
@@ -642,7 +619,7 @@ public class GameController
     return _players.ToList();
   }
 
-  // methods pembantu untuk console warna
+  // helper method
   private void SetConsoleColor(ConsoleColor color)
   {
     Console.ForegroundColor = color;
@@ -677,7 +654,6 @@ public class GameController
     };
   }
 
-  // method pembantu untuk menampilkan tangan pemain dengan warna warna
   private void DisplayPlayerHand(IPlayer player)
   {
     var hand = GetPlayerHand(player);
