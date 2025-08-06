@@ -1,10 +1,14 @@
 
 revisi game Uno:
-- GC hanya menerima inject, contructor dari luar
-- wl di UI, not GC
-- enums terpisah
+- GameController hanya berisi logic/ menerima inject, contructor dari luar
+- Writeline di UI, not GameController
+- enums terpisah ✅
 - Func dihapus, Action only
 - UI dibikin class/display di inject dari GC;
+
+- redundant itu kepakai 2x (forbidden)
+
+
 
 
 revisi class diagram 2:
