@@ -4,13 +4,13 @@ revisi game Uno:
 - Writeline di UI, not GameController
 - enums terpisah ✅
 - Func dihapus, Action only
-- UI dibikin class/display di inject dari GC;
+- UI dibikin class/display ✅ di inject dari GC;
+
+
+
+
 
 - redundant itu kepakai 2x (forbidden)
-
-
-
-
 revisi class diagram 2:
 -record struck coordinate untuk cek masing masing✅
 -player hanya name, sisanya GC ✅

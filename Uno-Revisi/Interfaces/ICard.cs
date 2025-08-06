@@ -1,4 +1,5 @@
-namespace UnoRevisi.interfaces;
+using UnoRevisi.Enums;
+namespace UnoRevisi.Interfaces;
 
 public interface ICard
 {
