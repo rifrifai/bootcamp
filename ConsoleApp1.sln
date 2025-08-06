@@ -145,6 +145,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Streams-and-IO", "Practice\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "File-Handling", "Practice\Streams-and-IO\File-Handling\File-Handling.csproj", "{76E10790-481E-408D-83B3-31062E8E9DDD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uno-Revisi", "Uno-Revisi\Uno-Revisi.csproj", "{1222A50B-F4B1-4680-A08D-323F21299E1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -863,6 +865,18 @@ Global
 		{76E10790-481E-408D-83B3-31062E8E9DDD}.Release|x64.Build.0 = Release|Any CPU
 		{76E10790-481E-408D-83B3-31062E8E9DDD}.Release|x86.ActiveCfg = Release|Any CPU
 		{76E10790-481E-408D-83B3-31062E8E9DDD}.Release|x86.Build.0 = Release|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Debug|x64.Build.0 = Debug|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Debug|x86.Build.0 = Debug|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Release|x64.ActiveCfg = Release|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Release|x64.Build.0 = Release|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Release|x86.ActiveCfg = Release|Any CPU
+		{1222A50B-F4B1-4680-A08D-323F21299E1E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

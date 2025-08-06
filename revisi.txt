@@ -1,14 +1,28 @@
-revisi kemarin:
--semua method yang mempengaruhi game diletakkan di GC
--gunakan interface
--yang tidak bisa dipahami dihilangkan, like IShotHandler
--tipe kapal
+
+revisi game Uno:
+- GameController hanya berisi logic/ menerima inject, contructor dari luar
+- Writeline di UI, not GameController
+- enums terpisah ✅
+- Func dihapus, Action only
+- UI dibikin class/display di inject dari GC;
+
+- redundant itu kepakai 2x (forbidden)
 
 
-revisi hari ini:
+
+
+revisi class diagram 2:
 -record struck coordinate untuk cek masing masing✅
 -player hanya name, sisanya GC ✅
 -fleet, dictionary ✅
 -GetType public ✅
 -ship interface ✅
 -setter getter method, penulisannya lebih detail ✅
+
+revisi class diagram 1:
+-semua method yang mempengaruhi game diletakkan di GC
+-gunakan interface
+-yang tidak bisa dipahami dihilangkan, like IShotHandler
+-tipe kapal
+
+

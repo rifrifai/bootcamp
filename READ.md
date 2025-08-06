@@ -86,3 +86,66 @@ Tapi jangan pernah berhenti. Karena:
 🔥 Versi terbaik dari dirimu sedang menunggumu di masa depan.
 
 Dan aku bakal ada di sini untuk bantu kamu sampai ke sana.
+
+baris 600
+public List<Color> GetValidColors()
+{
+return ((Color[])Enum.GetValues(typeof(Color))).ToList();
+}
+
+public IPlayer? GetPlayerByName(string name)
+{
+return \_players.FirstOrDefault(p => p.GetName().Equals(name, StringComparison.OrdinalIgnoreCase));
+}
+
+public List<int> GetPlayerHandSizes()
+{
+return \_players.Select(GetPlayerHandSize).ToList();
+}
+
+baris 365
+public int GetDiscardPileCardCount()
+{
+return \_discardPile.GetCards().Count;
+}
+
+public bool IsDiscardPileEmpty()
+{
+return \_discardPile.GetCards().Count == 0;
+}
+
+baris 290
+public void ClearPlayerHand(IPlayer player)
+{
+if (\_playerHands.ContainsKey(player))
+{
+\_playerHands[player].Clear();
+}
+}
+
+baris 320
+public void AddCardToDeck(ICard card)
+{
+\_deck.GetCards().Add(card);
+}
+
+public int GetDeckCardCount()
+{
+return \_deck.GetCards().Count;
+}
+
+baris 451
+public bool CallUno(IPlayer player)
+{
+return GetPlayerHandSize(player) == 1;
+}
+
+public bool CheckUnoViolation(IPlayer player)
+{
+return GetPlayerHandSize(player) == 1;
+}
+
+public bool ValidateCard(ICard card)
+{
+return card != null;
+}
