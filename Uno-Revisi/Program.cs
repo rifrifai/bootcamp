@@ -1,64 +1,56 @@
-﻿using UnoRevisi.Controller;
+﻿using UnoRevisi.View;
+using UnoRevisi.Controller;
 using UnoRevisi.Interfaces;
-using UnoRevisi.Models;
-using UnoRevisi.View;
 
 namespace UnoRevisi;
 
 class Program
 {
-  static void Main()
+  private static Display _display;
+  private static List<IPlayer> _players = null;
+  private static GameController _gameController = null;
+
+  public static void Main()
   {
-    List<IPlayer> players = new List<IPlayer>();
-    GameController gameController = new GameController(players);
-    Display display = new Display(gameController);
+    ShowWelcome();
 
-    display.ShowWelcome();
+    while (true)
+    {
 
-    // var gameController = new GameController();
+      if (!SetupAndStartNewGame()) break;
 
-    // IPlayer player = new Player(name: "player 1");
+      _display.RunGame();
 
-    // Display display = new Display(gameController);
+      _display.ShowGameEnd();
 
-    // SetupEventHandlers(gameController, display);
-
-    // display.ShowGameStarting();
-
-    // bool gameStarted = gameController.StartGame();
-    // if (!gameStarted)
-    // {
-    //   display.ShowInsufficientPlayers();
-    //   return;
-    // }
-
-    // display.ShowGameEnd();
+      if (!_display.AskPlayAgain()) break;
+    }
   }
 
+  public static bool SetupAndStartNewGame()
+  {
+    _players = _display.SetupPlayers();
+    _gameController = new GameController(_players);
 
-  // static Display SetupDisplay()
-  // {
-  //   var display = new Display();
-  //   display.ShowWelcome();
-  //   return display;
-  // }
+    if (_players.Count < 2)
+    {
+      _display.ShowInsufficientPlayers();
+      return false;
+    }
 
-  // static List<IPlayer> SetupPlayers(Display display)
-  // {
-  //   int numPlayers = display.GetPlayerCount();
-  //   var players = new List<IPlayer>();
+    _display.SetupEventHandlers();
 
-  //   for (int i = 1; i < numPlayers; i++)
-  //   {
-  //     string name = display.GetPlayerName(i);
-  //     players.Add(new Player(name));
-  //   }
-  //   return players;set
-  // }
+    _display.ShowGameStarting();
 
-  // static GameController CreateGameController(List<IPlayer> players)
-  // {
-  //   var startGame = new GameController(players);
-  //   return startGame;
-  // }
+    return _display.StartGame();
+  }
+
+  public static void ShowWelcome()
+  {
+    Console.Clear();
+    Console.WriteLine("🎮" + new string('=', 40) + "🎮");
+    Console.WriteLine("      SELAMAT DATANG DI PERMAINAN UNO!");
+    Console.WriteLine("🎮" + new string('=', 40) + "🎮");
+    Console.WriteLine();
+  }
 }

@@ -1,52 +1,37 @@
-using UnoRevisi.Controller;
 using UnoRevisi.Enums;
 using UnoRevisi.Interfaces;
 using UnoRevisi.Models;
+using UnoRevisi.Controller;
 
 namespace UnoRevisi.View;
 
 public class Display
 {
-  private GameController? _gameController = null;
-  private List<IPlayer> _players = new List<IPlayer>();
+  private GameController _gameController = null;
+  private List<IPlayer> _players = new();
 
-  public bool SetupAndStartNewGame()
+  #region Game Flow Management
+
+  public Display(GameController gameController)
   {
-    _players = SetupPlayers()
-
-    _gameController = new GameController(_players);
-
-    SetupEventHandlers();
-
-    ShowWelcome();
-
-    return StartGame();
+    _gameController = gameController;
   }
 
-  private List<IPlayer> SetupPlayers()
+  public void RunGame()
   {
-    int numPlayers = GetPlayerCount();
-    List<IPlayer> players = new List<IPlayer>();
+    if (_gameController == null) return;
 
-    for (int i = 1; i < numPlayers; i++)
+    while (!_gameController.IsGameOver())
     {
-      string name = GetPlayerName(i);
-      players.Add(new Player(name));
+      ProcessPlayerTurn();
     }
 
-    return players;
-  }
-
-  public void ShowWelcome()
-  {
-    Console.Clear();
-    SetConsoleColor(ConsoleColor.Yellow);
-    Console.WriteLine("🎮" + new string('=', 40) + "🎮");
-    Console.WriteLine("      SELAMAT DATANG DI PERMAINAN UNO!");
-    Console.WriteLine("🎮" + new string('=', 40) + "🎮");
-    ResetConsoleColor();
-    Console.WriteLine();
-    // _gameController.StartGame();
+    if (_gameController.IsGameOver())
+    {
+      var winner = _gameController.GetWinner();
+      var finalStats = _gameController.GetFinalGameStats();
+      ShowGameEnd(winner!, finalStats);
+    }
   }
 
   public bool StartGame()
@@ -62,8 +47,8 @@ public class Display
 
       if (firstCard.GetCardType() == CardType.Wild)
       {
-        wildColor = _gameController.ChooseWildColor();
-        _gameController.SetCurrentWildColor(wildColor);
+        wildColor = PickColorFromUser();
+        _gameController.ChooseWildColor(wildColor);
       }
 
       ShowGameStart(firstCard, wildColor);
@@ -72,33 +57,70 @@ public class Display
     return started;
   }
 
-  public void ProcessPlayerTurn()
+  private void ProcessPlayerTurn()
   {
     if (_gameController == null) return;
 
     var currentPlayer = _gameController.GetCurrentPlayer();
     var topCard = _gameController.GetTopDiscardCard();
     var playerHand = _gameController.GetPlayerHand(currentPlayer);
-    var playableCard = _gameController.GetPlayableCardsFromPlayer(currentPlayer, topCard!);
+    var playableCards = _gameController.GetPlayableCardsFromPlayer(currentPlayer, topCard!);
 
-    // display current game state
+    // Display current game state
     ShowGameState(currentPlayer, topCard!, _gameController.GetCurrentWildColor(), playerHand);
 
-    if (playableCard.Count == 0)
+    if (playableCards.Count == 0)
     {
+      HandleNoPlayableCards(currentPlayer);
+      return;
+    }
 
+    // Player chooses card
+    var chosenCard = ChooseCard(playableCards);
+
+    // Try to play card
+    if (_gameController.PlayCard(currentPlayer, chosenCard))
+    {
+      // Handle Wild card color selection BEFORE executing effects
+      if (chosenCard.GetCardType() == CardType.Wild)
+      {
+        var wildColor = PickColorFromUser();
+        _gameController.ChooseWildColor(wildColor);
+        PrintEffect(($"🎨 Kartu wild dipilih: {wildColor}", _gameController.GetColorFromEnum(wildColor)));
+      }
+
+      // Handle UNO call
+      if (_gameController.GetPlayerHandSize(currentPlayer) == 1)
+      {
+        HandleUnoCall(currentPlayer);
+      }
+
+      // Execute card effect
+      var cardEffect = _gameController.ExecuteCardEffect(chosenCard);
+      if (cardEffect.HasValue)
+      {
+        PrintEffect(cardEffect.Value);
+      }
+
+      // Simplified next player logic - let ExecuteCardEffect handle all turn advancement
+      // Only advance turn for normal cards (Number cards and regular Wild)
+      if (chosenCard.GetCardType() == CardType.Number ||
+          (chosenCard.GetCardType() == CardType.Wild && chosenCard.GetWildType() == WildType.Wild))
+      {
+        _gameController.NextPlayer();
+      }
     }
   }
 
-  public void HandleNoPlayableCards(IPlayer currentPlayer)
+  private void HandleNoPlayableCards(IPlayer currentPlayer)
   {
     if (_gameController == null) return;
 
-    // draw card from deck
-    var drawCard = _gameController.DrawCardFromDeck(currentPlayer);
-    ShowCardDrawn(drawCard);
+    // Draw card from deck
+    var drawnCard = _gameController.DrawCardFromDeck(currentPlayer);
+    ShowCardDrawn(drawnCard);
 
-    // check if drawn card is playable
+    // Check if drawn card is playable
     var topCard = _gameController.GetTopDiscardCard();
     var playableCards = _gameController.GetPlayableCardsFromPlayer(currentPlayer, topCard!);
 
@@ -109,16 +131,16 @@ public class Display
     }
     else
     {
-      // player can play with new cards
-      var choosenCard = _gameController.ChooseCard(playableCards);
-      if (_gameController.PlayCard(currentPlayer, choosenCard))
+      // Player can play with new cards
+      var chosenCard = ChooseCard(playableCards);
+      if (_gameController.PlayCard(currentPlayer, chosenCard))
       {
-        // handle wild card color selection here too
-        if (choosenCard.GetCardType() == CardType.Wild)
+        // Handle Wild card color selection here too
+        if (chosenCard.GetCardType() == CardType.Wild)
         {
-          var wildColor = _gameController.ChooseWildColor();
-          _gameController.SetCurrentWildColor(wildColor);
-          PrintEffect(($"🎨  wild card choosen: {wildColor}", _gameController.GetColorFromEnum(wildColor)));
+          var wildColor = PickColorFromUser();
+          _gameController.ChooseWildColor(wildColor);
+          PrintEffect(($"🎨 Kartu wild dipilih: {wildColor}", _gameController.GetColorFromEnum(wildColor)));
         }
 
         if (_gameController.GetPlayerHandSize(currentPlayer) == 1)
@@ -126,31 +148,28 @@ public class Display
           HandleUnoCall(currentPlayer);
         }
 
-        var cardEffect = _gameController.ExecuteCardEffect(choosenCard);
+        var cardEffect = _gameController.ExecuteCardEffect(chosenCard);
         if (cardEffect.HasValue)
         {
           PrintEffect(cardEffect.Value);
         }
 
-        if (choosenCard.GetCardType() == CardType.Number || (choosenCard.GetCardType() == CardType.Wild && choosenCard.GetWildType() == WildType.Wild))
+        // Same logic as above
+        if (chosenCard.GetCardType() == CardType.Number ||
+            (chosenCard.GetCardType() == CardType.Wild && chosenCard.GetWildType() == WildType.Wild))
         {
           _gameController.NextPlayer();
         }
       }
-
-      if (_gameController.GetPlayerHandSize(currentPlayer) == 1)
-      {
-        HandleUnoCall(currentPlayer);
-      }
     }
   }
 
-  public void HandleUnoCall(IPlayer player)
+  private void HandleUnoCall(IPlayer player)
   {
     if (_gameController == null) return;
 
-    var callUno = CheckUnoCall(player);
-    if (!callUno)
+    var calledUno = CheckUnoCall(player);
+    if (!calledUno)
     {
       ShowUnoViolation(player);
       _gameController.PenalizePlayer(player);
@@ -161,17 +180,90 @@ public class Display
     }
   }
 
-  public void ShowTurnSkipped()
+  public void SetupEventHandlers()
   {
-    SetConsoleColor(ConsoleColor.Yellow);
-    Console.WriteLine("⏭️  Masih tidak ada kartu yang bisa dimainkan. Giliran dilewati.");
-    ResetConsoleColor();
+    if (_gameController == null) return;
+
+    _gameController.OnPlayerTurnChanged += (player) =>
+    {
+      ShowPlayerTurnWait(player);
+    };
+
+    _gameController.OnCardPlayed += (player, card) =>
+    {
+      ShowCardPlayed(player, card);
+    };
+
+    _gameController.OnUnoViolation += (player) =>
+    {
+      ShowUnoViolation(player);
+    };
   }
+
+  #endregion
+
+  #region User Input Methods
+
+  public List<IPlayer> SetupPlayers()
+  {
+    int numPlayers = GetPlayerCount();
+    var players = new List<IPlayer>();
+
+    for (int i = 1; i <= numPlayers; i++)
+    {
+      string name = GetPlayerName(i);
+      players.Add(new Player(name));
+    }
+
+    return players;
+  }
+
+  private ICard ChooseCard(List<ICard> playableCards)
+  {
+    ShowPlayableCards(playableCards);
+
+    int choice;
+    while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > playableCards.Count)
+    {
+      ShowInvalidChoiceMessage();
+    }
+
+    return playableCards[choice - 1];
+  }
+
+  private Color PickColorFromUser()
+  {
+    ShowWildColorChoices();
+
+    var colors = (Color[])Enum.GetValues(typeof(Color));
+    int choice;
+
+    while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > colors.Length)
+    {
+      ShowInvalidColorChoice();
+    }
+
+    return colors[choice - 1];
+  }
+
+  public bool AskPlayAgain()
+  {
+    Console.WriteLine("\n🎮 Ingin bermain lagi? (y/n): ");
+    var input = Console.ReadLine()?.ToLower();
+    bool result = input == "y" || input == "yes";
+    return result;
+  }
+
+  #endregion
+
+  #region Display Methods
+
+
 
   public void ShowInsufficientPlayers()
   {
     SetConsoleColor(ConsoleColor.Red);
-    Console.WriteLine("Perlu minimal 2 permain untuk bermain!");
+    Console.WriteLine("❌ Perlu minimal 2 pemain untuk bermain!");
     ResetConsoleColor();
   }
 
@@ -247,6 +339,13 @@ public class Display
     ResetConsoleColor();
   }
 
+  public void ShowTurnSkipped()
+  {
+    SetConsoleColor(ConsoleColor.Yellow);
+    Console.WriteLine("⏭️  Masih tidak ada kartu yang bisa dimainkan. Giliran dilewati.");
+    ResetConsoleColor();
+  }
+
   public void ShowPlayableCards(List<ICard> playableCards)
   {
     SetConsoleColor(ConsoleColor.Yellow);
@@ -259,7 +358,7 @@ public class Display
       var card = playableCards[i];
       if (card.GetColor().HasValue)
       {
-        SetConsoleColor(GetColorFromEnum(card.GetColor()!.Value));
+        SetConsoleColor(GetColorFromEnum(card.GetColor().Value));
       }
       else
       {
@@ -298,7 +397,8 @@ public class Display
     Console.WriteLine($"🎯 {player.GetName()}, ingin memanggil UNO? (y/n):");
     ResetConsoleColor();
     var input = Console.ReadLine()?.ToLower();
-    return input == "y" || input == "yes";
+    bool result = input == "y" || input == "yes";
+    return result;
   }
 
   public void ShowUnoViolation(IPlayer player)
@@ -315,7 +415,7 @@ public class Display
     ResetConsoleColor();
   }
 
-  public void PrintEffect((string message, ConsoleColor color)? effect) //cant have 2 overloads
+  public void PrintEffect((string message, ConsoleColor color)? effect)
   {
     if (effect is null) return;
 
@@ -454,6 +554,16 @@ public class Display
     }
   }
 
+  private void SetConsoleColor(ConsoleColor color)
+  {
+    Console.ForegroundColor = color;
+  }
+
+  private void ResetConsoleColor()
+  {
+    Console.ResetColor();
+  }
+
   private ConsoleColor GetColorFromEnum(Color color)
   {
     return color switch
@@ -464,32 +574,6 @@ public class Display
       Color.Yellow => ConsoleColor.Yellow,
       _ => ConsoleColor.White
     };
-  }
-
-  // static void SetupEventHandlers()
-  public void SetupEventHandlers()
-  {
-    if (_gameController == null) return;
-
-    _gameController.OnPlayerTurnChanged += (player) =>
-    {
-      ShowPlayerTurnWait(player);
-    };
-
-    _gameController.OnCardPlayed += (player, card) =>
-    {
-      ShowCardPlayed(player, card);
-    };
-  }
-
-  public void SetConsoleColor(ConsoleColor color)
-  {
-    Console.ForegroundColor = color;
-  }
-
-  static void ResetConsoleColor()
-  {
-    Console.ResetColor();
   }
 
   private string GetColorEmoji(Color color)
@@ -503,4 +587,6 @@ public class Display
       _ => "⚫"
     };
   }
+
+  #endregion
 }

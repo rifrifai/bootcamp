@@ -1,7 +1,6 @@
 using UnoRevisi.Enums;
 using UnoRevisi.Interfaces;
 using UnoRevisi.Models;
-using UnoRevisi.View;
 
 namespace UnoRevisi.Controller;
 
@@ -15,23 +14,27 @@ public class GameController
   private bool _isClockwise;
   private Color? _currentWildColor;
   private Random _random;
-  // private Display _display;
+  private bool _gameStarted;
 
+  // Events for Program.cs to listen
   public Action<IPlayer>? OnPlayerTurnChanged;
   public Action<IPlayer, ICard>? OnCardPlayed;
   public Action<IPlayer>? OnUnoViolation;
   public Action<IPlayer>? OnGameEnded;
 
-  public GameController(List<IPlayer> players, DiscardPile discardPile, Deck deck)
+  public GameController(List<IPlayer> players)
   {
     _players = players;
     _playerHands = new Dictionary<IPlayer, List<ICard>>();
-    _deck = deck;
-    _discardPile = discardPile;
+    _deck = new Deck();
+    _discardPile = new DiscardPile();
     _currentPlayerIndex = 0;
     _isClockwise = true;
     _random = new Random();
+    _gameStarted = false;
   }
+
+  #region Game Initialization
 
   public bool StartGame()
   {
@@ -49,13 +52,13 @@ public class GameController
     _deck.GetCards().RemoveAt(0);
     _discardPile.GetCards().Add(firstCard);
 
-    if (firstCard.GetCardType() == CardType.Wild)
-    {
-      _currentWildColor = ChooseWildColor();
-    }
-
-    GameLoop();
+    _gameStarted = true;
     return true;
+  }
+
+  public bool IsGameStarted()
+  {
+    return _gameStarted;
   }
 
   private void InitializeDeck()
@@ -89,200 +92,6 @@ public class GameController
     _deck.SetCards(cards);
   }
 
-  public void AddPlayerHand(IPlayer player)
-  {
-    _playerHands[player] = new List<ICard>();
-  }
-
-  public void InitializePlayerHands(List<IPlayer> players)
-  {
-    foreach (var player in players)
-    {
-      AddPlayerHand(player);
-    }
-  }
-
-  public void GameLoop()
-  {
-    while (!IsGameOver())
-    {
-      var currentPlayer = GetCurrentPlayer();
-      OnPlayerTurnChanged?.Invoke(currentPlayer);
-      Console.Clear();
-
-      var topCard = GetTopDiscardCard();
-      var playerHand = GetPlayerHand(currentPlayer);
-      var playableCards = GetPlayableCardsFromPlayer(currentPlayer, topCard!);
-
-      // display current game state
-      _display.ShowGameState(currentPlayer, topCard!, _currentWildColor, playerHand);
-
-      if (playableCards.Count == 0)
-      {
-        var drawnCard = DrawCardFromDeck(currentPlayer);
-        _display.ShowCardDrawn(drawnCard);
-
-        playableCards = GetPlayableCardsFromPlayer(currentPlayer, GetTopDiscardCard()!);
-        if (playableCards.Count == 0)
-        {
-          _display.ShowTurnSkipped();
-          NextPlayer();
-          continue;
-        }
-      }
-
-      var chosenCard = ChooseCard(playableCards);
-
-      if (PlayCard(currentPlayer, chosenCard))
-      {
-        OnCardPlayed?.Invoke(currentPlayer, chosenCard);
-
-        if (GetPlayerHandSize(currentPlayer) == 1)
-        {
-          var calledUno = _display.CheckUnoCall(currentPlayer);
-          if (!calledUno)
-          {
-            _display.ShowUnoViolation(currentPlayer);
-            OnUnoViolation?.Invoke(currentPlayer);
-            PenalizePlayer(currentPlayer);
-          }
-          else
-          {
-            _display.ShowUnoCall(currentPlayer);
-          }
-        }
-
-        var cardEffect = ExecuteCardEffect(chosenCard);
-        if (cardEffect.HasValue)
-        {
-          _display.PrintEffect(cardEffect.Value);
-        }
-
-        if (chosenCard.GetCardType() != CardType.Action ||
-            (chosenCard.GetActionType() != ActionType.Skip &&
-             chosenCard.GetActionType() != ActionType.DrawTwo &&
-             !(chosenCard.GetActionType() == ActionType.Reverse && _players.Count == 2)))
-        {
-          if (chosenCard.GetCardType() != CardType.Wild ||
-              chosenCard.GetWildType() != WildType.WildDrawFour)
-          {
-            NextPlayer();
-          }
-        }
-      }
-    }
-    if (IsGameOver())
-    {
-      var winner = GetWinner();
-      var finalStats = GetFinalGameStats();
-      _display.ShowGameEnd(winner!, finalStats);
-      OnGameEnded?.Invoke(winner!);
-    }
-  }
-
-  public ICard GetFirstCard()
-  {
-    var cards = _discardPile.GetCards();
-    var result = cards.Count > 0 ? cards.First() : null!;
-    return result;
-  }
-
-  public void NextPlayer()
-  {
-    if (_isClockwise)
-    {
-      _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Count;
-    }
-    else
-    {
-      _currentPlayerIndex = (_currentPlayerIndex - 1 + _players.Count) % _players.Count;
-    }
-  }
-
-  public void SetCurrentWildColor(Color? color)
-  {
-    _currentWildColor = color;
-  }
-
-  public bool IsGameOver()
-  {
-    return _players.Any(p => GetPlayerHandSize(p) == 0);
-  }
-
-  public IPlayer? GetWinner()
-  {
-    return _players.FirstOrDefault(p => GetPlayerHandSize(p) == 0);
-  }
-
-  // Player Hand Management Methods
-  public void AddCardToPlayer(IPlayer player, ICard card)
-  {
-    if (_playerHands.ContainsKey(player))
-    {
-      _playerHands[player].Add(card);
-    }
-  }
-
-  public bool RemoveCardFromPlayer(IPlayer player, ICard card)
-  {
-    if (_playerHands.ContainsKey(player))
-    {
-      return _playerHands[player].Remove(card);
-    }
-    return false;
-  }
-
-  public int GetPlayerHandSize(IPlayer player)
-  {
-    return _playerHands.ContainsKey(player) ? _playerHands[player].Count : 0;
-  }
-
-  public bool PlayerHasCard(IPlayer player, ICard card)
-  {
-    return _playerHands.ContainsKey(player) && _playerHands[player].Contains(card);
-  }
-
-  public List<ICard> GetPlayerHand(IPlayer player)
-  {
-    return _playerHands.ContainsKey(player) ? _playerHands[player] : new List<ICard>();
-  }
-
-  // Card Management Methods
-  public bool PlayCard(IPlayer player, ICard card)
-  {
-    if (!PlayerHasCard(player, card) || !CanPlayCard(card, GetTopDiscardCard()!))
-    {
-      return false;
-    }
-
-    if (card.GetCardType() != CardType.Wild)
-    {
-      _currentWildColor = null;
-    }
-
-    RemoveCardFromPlayer(player, card);
-    AddCardToDiscardPile(card);
-    return true;
-  }
-
-  public ICard DrawCardFromDeck(IPlayer player)
-  {
-    if (IsDeckEmpty())
-    {
-      RecycleDiscardPile();
-    }
-
-    var card = _deck.GetCardAt(0);
-    _deck.GetCards().RemoveAt(0);
-    AddCardToPlayer(player, card);
-    return card;
-  }
-
-  public bool IsDeckEmpty()
-  {
-    return _deck.GetCards().Count == 0;
-  }
-
   public void ShuffleDeck()
   {
     var cards = _deck.GetCards();
@@ -293,135 +102,13 @@ public class GameController
     }
   }
 
-  public void AddCardToDiscardPile(ICard card)
+  public void InitializePlayerHands(List<IPlayer> players)
   {
-    _discardPile.GetCards().Add(card);
-  }
-
-  public ICard? GetTopDiscardCard()
-  {
-    var cards = _discardPile.GetCards();
-    return cards.Count > 0 ? cards.Last() : null;
-  }
-
-  public List<ICard> GetPlayableCardsFromPlayer(IPlayer player, ICard topCard)
-  {
-    var hand = GetPlayerHand(player);
-    return hand.Where(card => CanPlayCard(card, topCard)).ToList();
-  }
-
-  public ICard ChooseCard(List<ICard> playableCards)
-  {
-    _display.ShowPlayableCards(playableCards); // Just shows the cards
-
-    int choice;
-    while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > playableCards.Count)
+    _playerHands.Clear();
+    foreach (var player in players)
     {
-      _display.ShowInvalidChoiceMessage(); // Optional method in Display
+      _playerHands[player] = new List<ICard>();
     }
-
-    return playableCards[choice - 1];
-  }
-
-
-  public (string message, ConsoleColor color)? ExecuteCardEffect(ICard card)
-  {
-    switch (card.GetCardType())
-    {
-      case CardType.Action:
-        switch (card.GetActionType())
-        {
-          case ActionType.Skip:
-            NextPlayer();
-            var skipped = GetCurrentPlayer();
-            NextPlayer();
-            return ($"🚫 {skipped.GetName()} di skip!", ConsoleColor.Red);
-
-          case ActionType.Reverse:
-            ReverseDirection();
-            if (_players.Count == 2)
-            {
-              return ("🔄 Direction dibalik! Kartu reverse bersifat skip, silahkan bermain lagi!", ConsoleColor.Magenta);
-            }
-            return ("🔄 Direction dibalik!", ConsoleColor.Magenta);
-
-          case ActionType.DrawTwo:
-            NextPlayer();
-            var target = GetCurrentPlayer();
-            DrawCardFromDeck(target);
-            DrawCardFromDeck(target);
-            NextPlayer();
-            return ($"📥 {target.GetName()} mengambil 2 kartu dan di skip!", ConsoleColor.Yellow);
-        }
-        break;
-
-      case CardType.Wild:
-        _currentWildColor = ChooseWildColor();
-
-        if (card.GetWildType() == WildType.WildDrawFour)
-        {
-          NextPlayer();
-          var wildTarget = GetCurrentPlayer();
-          for (int i = 0; i < 4; i++)
-          {
-            DrawCardFromDeck(wildTarget);
-          }
-          NextPlayer();
-          return ($"💥 Kartu wild dipilih: {_currentWildColor}. {wildTarget.GetName()} mengambil 4 kartu dan di skip!", ConsoleColor.Red);
-        }
-
-        return ($"🎨 Kartu wild dipilih: {_currentWildColor}", GetColorFromEnum(_currentWildColor));
-    }
-
-    return null;
-  }
-
-  public ConsoleColor GetColorFromEnum(Color? color)
-  {
-    return color switch
-    {
-      Color.Red => ConsoleColor.Red,
-      Color.Blue => ConsoleColor.Blue,
-      Color.Green => ConsoleColor.Green,
-      Color.Yellow => ConsoleColor.Yellow,
-      _ => ConsoleColor.White
-    };
-  }
-
-
-  // Rules
-  public void PenalizePlayer(IPlayer player)
-  {
-    DrawCardFromDeck(player);
-    DrawCardFromDeck(player);
-  }
-
-  public bool CanPlayCard(ICard card, ICard topCard)
-  {
-    if (topCard == null) return true;
-
-    if (card.GetCardType() == CardType.Wild) return true;
-
-    if (_currentWildColor.HasValue)
-    {
-      return card.GetColor() == _currentWildColor.Value;
-    }
-
-    if (card.GetColor() == topCard.GetColor()) return true;
-
-    if (card.GetCardType() == CardType.Number && topCard.GetCardType() == CardType.Number)
-    {
-      return card.GetNumber().HasValue && topCard.GetNumber().HasValue &&
-             card.GetNumber()!.Value == topCard.GetNumber()!.Value;
-    }
-
-    if (card.GetCardType() == CardType.Action && topCard.GetCardType() == CardType.Action)
-    {
-      return card.GetActionType().HasValue && topCard.GetActionType().HasValue &&
-             card.GetActionType()!.Value == topCard.GetActionType()!.Value;
-    }
-
-    return false;
   }
 
   public void DealCardsToPlayers()
@@ -438,24 +125,150 @@ public class GameController
     }
   }
 
+  public ICard GetFirstCard()
+  {
+    var cards = _discardPile.GetCards();
+    var result = cards.Count > 0 ? cards.First() : null!;
+    return result;
+  }
+
+  #endregion
+
+  #region Player Management
+
+  public IPlayer GetCurrentPlayer()
+  {
+    return _players[_currentPlayerIndex];
+  }
+
+  public void NextPlayer()
+  {
+    if (_isClockwise)
+    {
+      _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.Count;
+    }
+    else
+    {
+      _currentPlayerIndex = (_currentPlayerIndex - 1 + _players.Count) % _players.Count;
+    }
+
+    OnPlayerTurnChanged?.Invoke(GetCurrentPlayer());
+  }
+
   public void ReverseDirection()
   {
     _isClockwise = !_isClockwise;
   }
 
-  public Color ChooseWildColor()
+  public List<IPlayer> GetAllPlayers()
   {
-    _display.ShowWildColorChoices();
+    return _players.ToList();
+  }
 
-    var colors = (Color[])Enum.GetValues(typeof(Color));
-    int choice;
+  #endregion
 
-    while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > colors.Length)
+  #region Card Management
+
+  public void AddCardToPlayer(IPlayer player, ICard card)
+  {
+    if (_playerHands.ContainsKey(player))
     {
-      _display.ShowInvalidColorChoice();
+      _playerHands[player].Add(card);
+    }
+  }
+
+  public bool RemoveCardFromPlayer(IPlayer player, ICard card)
+  {
+    if (_playerHands.ContainsKey(player))
+    {
+      bool result = _playerHands[player].Remove(card);
+      return result;
+    }
+    return false;
+  }
+
+  public List<ICard> GetPlayerHand(IPlayer player)
+  {
+    var result = _playerHands.ContainsKey(player) ? _playerHands[player] : new List<ICard>();
+    return result;
+  }
+
+  public int GetPlayerHandSize(IPlayer player)
+  {
+    int result = _playerHands.ContainsKey(player) ? _playerHands[player].Count : 0;
+    return result;
+  }
+
+  public bool PlayerHasCard(IPlayer player, ICard card)
+  {
+    bool result = _playerHands.ContainsKey(player) && _playerHands[player].Contains(card);
+    return result;
+  }
+
+  public bool PlayCard(IPlayer player, ICard card)
+  {
+    if (!PlayerHasCard(player, card) || !CanPlayCard(card, GetTopDiscardCard()!))
+    {
+      return false;
     }
 
-    return colors[choice - 1];
+    if (card.GetCardType() != CardType.Wild)
+    {
+      _currentWildColor = null;
+    }
+
+    RemoveCardFromPlayer(player, card);
+    AddCardToDiscardPile(card);
+
+    OnCardPlayed?.Invoke(player, card);
+    return true;
+  }
+
+  public ICard DrawCardFromDeck(IPlayer player)
+  {
+    if (IsDeckEmpty())
+    {
+      RecycleDiscardPile();
+    }
+
+    var card = _deck.GetCardAt(0);
+    _deck.GetCards().RemoveAt(0);
+    AddCardToPlayer(player, card);
+    return card;
+  }
+
+  public List<ICard> GetPlayableCardsFromPlayer(IPlayer player, ICard topCard)
+  {
+    var hand = GetPlayerHand(player);
+    var result = hand.Where(card => CanPlayCard(card, topCard)).ToList();
+    return result;
+  }
+
+  public void ChooseWildColor(Color? color)
+  {
+    _currentWildColor = color;
+  }
+
+  #endregion
+
+  #region Deck & Discard Management
+
+  public bool IsDeckEmpty()
+  {
+    bool result = _deck.GetCards().Count == 0;
+    return result;
+  }
+
+  public void AddCardToDiscardPile(ICard card)
+  {
+    _discardPile.GetCards().Add(card);
+  }
+
+  public ICard? GetTopDiscardCard()
+  {
+    var cards = _discardPile.GetCards();
+    var result = cards.Count > 0 ? cards.Last() : null;
+    return result;
   }
 
   public void RecycleDiscardPile()
@@ -474,19 +287,124 @@ public class GameController
     _deck.SetCards(cards);
     _discardPile.SetCards(new List<ICard> { topCard! });
     ShuffleDeck();
-
-    _display.ShowDeckRecycled();
   }
 
-  // Query methods
-  public IPlayer GetCurrentPlayer()
+  #endregion
+
+  #region Game Rules & Effects
+
+  public bool CanPlayCard(ICard card, ICard topCard)
   {
-    return _players[_currentPlayerIndex];
+    if (topCard == null) return true;
+
+    if (card.GetCardType() == CardType.Wild) return true;
+
+    if (_currentWildColor.HasValue)
+    {
+      bool result = card.GetColor() == _currentWildColor.Value;
+      return result;
+    }
+
+    if (card.GetColor() == topCard.GetColor()) return true;
+
+    if (card.GetCardType() == CardType.Number && topCard.GetCardType() == CardType.Number)
+    {
+      bool result = card.GetNumber().HasValue && topCard.GetNumber().HasValue && card.GetNumber()!.Value == topCard.GetNumber()!.Value;
+      return result;
+    }
+
+    if (card.GetCardType() == CardType.Action && topCard.GetCardType() == CardType.Action)
+    {
+      bool result = card.GetActionType().HasValue && topCard.GetActionType().HasValue && card.GetActionType()!.Value == topCard.GetActionType()!.Value;
+      return result;
+    }
+
+    return false;
   }
 
-  public List<IPlayer> GetAllPlayers()
+  public (string message, ConsoleColor color)? ExecuteCardEffect(ICard card)
   {
-    return _players.ToList();
+    switch (card.GetCardType())
+    {
+      case CardType.Action:
+        switch (card.GetActionType())
+        {
+          case ActionType.Skip:
+            NextPlayer();
+            var skipped = GetCurrentPlayer();
+            // NextPlayer();
+            var result = ($"🚫 {skipped.GetName()} di skip!", ConsoleColor.Red);
+            return result;
+
+          case ActionType.Reverse:
+            ReverseDirection();
+            if (_players.Count == 2)
+            {
+              return ("🔄 Direction dibalik! Kartu reverse bersifat skip, silahkan bermain lagi!", ConsoleColor.Magenta);
+            }
+            return ("🔄 Direction dibalik!", ConsoleColor.Magenta);
+
+          case ActionType.DrawTwo:
+            NextPlayer();
+            var target = GetCurrentPlayer();
+            DrawCardFromDeck(target);
+            DrawCardFromDeck(target);
+            // NextPlayer();
+            return ($"📥 {target.GetName()} mengambil 2 kartu dan di skip!", ConsoleColor.Yellow);
+        }
+        break;
+
+      case CardType.Wild:
+        if (card.GetWildType() == WildType.WildDrawFour)
+        {
+          NextPlayer();
+          var wildTarget = GetCurrentPlayer();
+          for (int i = 0; i < 4; i++)
+          {
+            DrawCardFromDeck(wildTarget);
+          }
+          // NextPlayer();
+          return ($"💥 Kartu wild: {_currentWildColor}. {wildTarget.GetName()} mengambil 4 kartu dan di skip!", ConsoleColor.Red);
+        }
+        return ($"🎨 Kartu wild dipilih: {_currentWildColor}", GetColorFromEnum(_currentWildColor));
+    }
+
+    return null;
+  }
+
+  public void PenalizePlayer(IPlayer player)
+  {
+    DrawCardFromDeck(player);
+    DrawCardFromDeck(player);
+    OnUnoViolation?.Invoke(player);
+  }
+
+  public ConsoleColor GetColorFromEnum(Color? color)
+  {
+    return color switch
+    {
+      Color.Red => ConsoleColor.Red,
+      Color.Blue => ConsoleColor.Blue,
+      Color.Green => ConsoleColor.Green,
+      Color.Yellow => ConsoleColor.Yellow,
+      _ => ConsoleColor.White
+    };
+  }
+
+  #endregion
+
+  #region Game State
+
+  public bool IsGameOver()
+  {
+    bool result = _players.Any(p => GetPlayerHandSize(p) == 0);
+    return result;
+  }
+
+  public IPlayer? GetWinner()
+  {
+    var result = _players.FirstOrDefault(p => GetPlayerHandSize(p) == 0);
+    return result;
   }
 
   public Color? GetCurrentWildColor()
@@ -496,6 +414,9 @@ public class GameController
 
   public List<(IPlayer Player, int HandSize)> GetFinalGameStats()
   {
-    return _players.Select(p => (p, GetPlayerHandSize(p))).ToList();
+    var result = _players.Select(p => (p, GetPlayerHandSize(p))).ToList();
+    return result;
   }
+
+  #endregion
 }
