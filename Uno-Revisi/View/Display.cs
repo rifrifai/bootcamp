@@ -260,10 +260,10 @@ public class Display
   public string GetPlayerName(int playerNumber)
   {
     SetConsoleColor(ConsoleColor.Green);
-    Console.Write($"🏷️  Masukkan nama pemain {playerNumber + 1}: ");
+    Console.Write($"🏷️  Masukkan nama pemain {playerNumber}: ");
     ResetConsoleColor();
     string? input = Console.ReadLine();
-    string name = string.IsNullOrWhiteSpace(input) ? $"Pemain {playerNumber + 1}" : input;
+    string name = string.IsNullOrWhiteSpace(input) ? $"Pemain {playerNumber}" : input;
     return name;
   }
 

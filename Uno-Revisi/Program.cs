@@ -16,6 +16,7 @@ class Program
     var gameController = CreateGameController(players, display);
 
     SetupEventHandlers(gameController, display);
+
     display.ShowGameStarting();
 
     bool gameStarted = gameController.StartGame();
@@ -41,7 +42,7 @@ class Program
     int numPlayers = display.GetPlayerCount();
     var players = new List<IPlayer>();
 
-    for (int i = 0; i < numPlayers; i++)
+    for (int i = 1; i < numPlayers; i++)
     {
       string name = display.GetPlayerName(i);
       players.Add(new Player(name));
