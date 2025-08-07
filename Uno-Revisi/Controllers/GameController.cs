@@ -181,8 +181,7 @@ public class GameController
   {
     if (_playerHands.ContainsKey(player))
     {
-      bool result = _playerHands[player].Remove(card);
-      return result;
+      return _playerHands[player].Remove(card);
     }
     return false;
   }
@@ -195,13 +194,13 @@ public class GameController
 
   public int GetPlayerHandSize(IPlayer player)
   {
-    int result = _playerHands.ContainsKey(player) ? _playerHands[player].Count : 0;
+    var result = _playerHands.ContainsKey(player) ? _playerHands[player].Count : 0;
     return result;
   }
 
   public bool PlayerHasCard(IPlayer player, ICard card)
   {
-    bool result = _playerHands.ContainsKey(player) && _playerHands[player].Contains(card);
+    var result = _playerHands.ContainsKey(player) && _playerHands[player].Contains(card);
     return result;
   }
 
@@ -244,18 +243,13 @@ public class GameController
     return result;
   }
 
-  public void ChooseWildColor(Color? color)
-  {
-    _currentWildColor = color;
-  }
-
   #endregion
 
   #region Deck & Discard Management
 
   public bool IsDeckEmpty()
   {
-    bool result = _deck.GetCards().Count == 0;
+    var result = _deck.GetCards().Count == 0;
     return result;
   }
 
@@ -301,28 +295,30 @@ public class GameController
 
     if (_currentWildColor.HasValue)
     {
-      bool result = card.GetColor() == _currentWildColor.Value;
-      return result;
+      var aresult = card.GetColor() == _currentWildColor.Value;
+      return aresult;
     }
 
     if (card.GetColor() == topCard.GetColor()) return true;
 
     if (card.GetCardType() == CardType.Number && topCard.GetCardType() == CardType.Number)
     {
-      bool result = card.GetNumber().HasValue && topCard.GetNumber().HasValue && card.GetNumber()!.Value == topCard.GetNumber()!.Value;
-      return result;
+      var bresult = card.GetNumber().HasValue && topCard.GetNumber().HasValue &&
+             card.GetNumber()!.Value == topCard.GetNumber()!.Value;
+      return bresult;
     }
 
     if (card.GetCardType() == CardType.Action && topCard.GetCardType() == CardType.Action)
     {
-      bool result = card.GetActionType().HasValue && topCard.GetActionType().HasValue && card.GetActionType()!.Value == topCard.GetActionType()!.Value;
-      return result;
+      var cresult = card.GetActionType().HasValue && topCard.GetActionType().HasValue &&
+             card.GetActionType()!.Value == topCard.GetActionType()!.Value;
+      return cresult;
     }
 
     return false;
   }
 
-  public (string message, ConsoleColor color)? ExecuteCardEffect(ICard card)
+  public CardEffectResult? ExecuteCardEffect(ICard card)
   {
     switch (card.GetCardType())
     {
@@ -332,25 +328,28 @@ public class GameController
           case ActionType.Skip:
             NextPlayer();
             var skipped = GetCurrentPlayer();
-            // NextPlayer();
-            var result = ($"🚫 {skipped.GetName()} di skip!", ConsoleColor.Red);
-            return result;
+            NextPlayer();
+            var oresult = new CardEffectResult($"🚫 {skipped.GetName()} di skip!", ConsoleColor.Red);
+            return oresult;
 
           case ActionType.Reverse:
             ReverseDirection();
             if (_players.Count == 2)
             {
-              return ("🔄 Direction dibalik! Kartu reverse bersifat skip, silahkan bermain lagi!", ConsoleColor.Magenta);
+              var iresult = new CardEffectResult("🔄 Direction dibalik! Kartu reverse bersifat skip, silahkan bermain lagi!", ConsoleColor.Magenta);
+              return iresult;
             }
-            return ("🔄 Direction dibalik!", ConsoleColor.Magenta);
+            var uresult = new CardEffectResult("🔄 Direction dibalik!", ConsoleColor.Magenta);
+            return uresult;
 
           case ActionType.DrawTwo:
             NextPlayer();
             var target = GetCurrentPlayer();
             DrawCardFromDeck(target);
             DrawCardFromDeck(target);
-            // NextPlayer();
-            return ($"📥 {target.GetName()} mengambil 2 kartu dan di skip!", ConsoleColor.Yellow);
+            NextPlayer();
+            var yresult = new CardEffectResult($"📥 {target.GetName()} mengambil 2 kartu dan di skip!", ConsoleColor.Yellow);
+            return yresult;
         }
         break;
 
@@ -363,10 +362,12 @@ public class GameController
           {
             DrawCardFromDeck(wildTarget);
           }
-          // NextPlayer();
-          return ($"💥 Kartu wild: {_currentWildColor}. {wildTarget.GetName()} mengambil 4 kartu dan di skip!", ConsoleColor.Red);
+          NextPlayer();
+          var xresult = new CardEffectResult($"💥 Kartu wild: {_currentWildColor}. {wildTarget.GetName()} mengambil 4 kartu dan di skip!", ConsoleColor.Red);
+          return xresult;
         }
-        return ($"🎨 Kartu wild dipilih: {_currentWildColor}", GetColorFromEnum(_currentWildColor));
+        var zresult = new CardEffectResult($"🎨 Kartu wild dipilih: {_currentWildColor}", GetColorFromEnum(_currentWildColor));
+        return zresult;
     }
 
     return null;
@@ -381,7 +382,7 @@ public class GameController
 
   public ConsoleColor GetColorFromEnum(Color? color)
   {
-    return color switch
+    var result = color switch
     {
       Color.Red => ConsoleColor.Red,
       Color.Blue => ConsoleColor.Blue,
@@ -389,6 +390,7 @@ public class GameController
       Color.Yellow => ConsoleColor.Yellow,
       _ => ConsoleColor.White
     };
+    return result;
   }
 
   #endregion
@@ -397,7 +399,7 @@ public class GameController
 
   public bool IsGameOver()
   {
-    bool result = _players.Any(p => GetPlayerHandSize(p) == 0);
+    var result = _players.Any(p => GetPlayerHandSize(p) == 0);
     return result;
   }
 
@@ -410,6 +412,11 @@ public class GameController
   public Color? GetCurrentWildColor()
   {
     return _currentWildColor;
+  }
+
+  public void SetCurrentWildColor(Color? color)
+  {
+    _currentWildColor = color;
   }
 
   public List<(IPlayer Player, int HandSize)> GetFinalGameStats()

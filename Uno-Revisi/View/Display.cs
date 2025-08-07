@@ -12,9 +12,35 @@ public class Display
 
   #region Game Flow Management
 
-  public Display(GameController gameController)
+  public void GameLoop()
   {
-    _gameController = gameController;
+    while (true)
+    {
+      if (!SetupAndStartNewGame()) break;
+
+      RunGame();
+
+      ShowGameEnd();
+
+      if (!AskPlayAgain()) break;
+    }
+  }
+
+  public bool SetupAndStartNewGame()
+  {
+    _players = SetupPlayers();
+    if (_players.Count < 2)
+    {
+      ShowInsufficientPlayers();
+      return false;
+    }
+
+    _gameController = new GameController(_players);
+    SetupEventHandlers();
+
+    ShowGameStarting();
+
+    return StartGame();
   }
 
   public void RunGame()
@@ -34,7 +60,7 @@ public class Display
     }
   }
 
-  public bool StartGame()
+  private bool StartGame()
   {
     if (_gameController == null) return false;
 
@@ -47,8 +73,8 @@ public class Display
 
       if (firstCard.GetCardType() == CardType.Wild)
       {
-        wildColor = PickColorFromUser();
-        _gameController.ChooseWildColor(wildColor);
+        wildColor = ChooseWildColor();
+        _gameController.SetCurrentWildColor(wildColor);
       }
 
       ShowGameStart(firstCard, wildColor);
@@ -84,8 +110,8 @@ public class Display
       // Handle Wild card color selection BEFORE executing effects
       if (chosenCard.GetCardType() == CardType.Wild)
       {
-        var wildColor = PickColorFromUser();
-        _gameController.ChooseWildColor(wildColor);
+        var wildColor = ChooseWildColor();
+        _gameController.SetCurrentWildColor(wildColor);
         PrintEffect(($"🎨 Kartu wild dipilih: {wildColor}", _gameController.GetColorFromEnum(wildColor)));
       }
 
@@ -97,9 +123,9 @@ public class Display
 
       // Execute card effect
       var cardEffect = _gameController.ExecuteCardEffect(chosenCard);
-      if (cardEffect.HasValue)
+      if (cardEffect != null)
       {
-        PrintEffect(cardEffect.Value);
+        PrintEffect((cardEffect.Message, cardEffect.Color));
       }
 
       // Simplified next player logic - let ExecuteCardEffect handle all turn advancement
@@ -138,8 +164,8 @@ public class Display
         // Handle Wild card color selection here too
         if (chosenCard.GetCardType() == CardType.Wild)
         {
-          var wildColor = PickColorFromUser();
-          _gameController.ChooseWildColor(wildColor);
+          var wildColor = ChooseWildColor();
+          _gameController.SetCurrentWildColor(wildColor);
           PrintEffect(($"🎨 Kartu wild dipilih: {wildColor}", _gameController.GetColorFromEnum(wildColor)));
         }
 
@@ -149,9 +175,9 @@ public class Display
         }
 
         var cardEffect = _gameController.ExecuteCardEffect(chosenCard);
-        if (cardEffect.HasValue)
+        if (cardEffect != null)
         {
-          PrintEffect(cardEffect.Value);
+          PrintEffect((cardEffect.Message, cardEffect.Color));
         }
 
         // Same logic as above
@@ -180,7 +206,7 @@ public class Display
     }
   }
 
-  public void SetupEventHandlers()
+  private void SetupEventHandlers()
   {
     if (_gameController == null) return;
 
@@ -204,7 +230,7 @@ public class Display
 
   #region User Input Methods
 
-  public List<IPlayer> SetupPlayers()
+  private List<IPlayer> SetupPlayers()
   {
     int numPlayers = GetPlayerCount();
     var players = new List<IPlayer>();
@@ -231,7 +257,7 @@ public class Display
     return playableCards[choice - 1];
   }
 
-  private Color PickColorFromUser()
+  private Color ChooseWildColor()
   {
     ShowWildColorChoices();
 
@@ -250,15 +276,23 @@ public class Display
   {
     Console.WriteLine("\n🎮 Ingin bermain lagi? (y/n): ");
     var input = Console.ReadLine()?.ToLower();
-    bool result = input == "y" || input == "yes";
-    return result;
+    return input == "y" || input == "yes";
   }
 
   #endregion
 
   #region Display Methods
 
-
+  public void ShowWelcome()
+  {
+    Console.Clear();
+    SetConsoleColor(ConsoleColor.Yellow);
+    Console.WriteLine("🎮" + new string('=', 40) + "🎮");
+    Console.WriteLine("      SELAMAT DATANG DI PERMAINAN UNO!");
+    Console.WriteLine("🎮" + new string('=', 40) + "🎮");
+    ResetConsoleColor();
+    Console.WriteLine();
+  }
 
   public void ShowInsufficientPlayers()
   {
@@ -397,8 +431,7 @@ public class Display
     Console.WriteLine($"🎯 {player.GetName()}, ingin memanggil UNO? (y/n):");
     ResetConsoleColor();
     var input = Console.ReadLine()?.ToLower();
-    bool result = input == "y" || input == "yes";
-    return result;
+    return input == "y" || input == "yes";
   }
 
   public void ShowUnoViolation(IPlayer player)
