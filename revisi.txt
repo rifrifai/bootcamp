@@ -1,7 +1,7 @@
 
 revisi game Uno:
 - GameController hanya berisi logic/ menerima inject, contructor dari luar
-- Writeline di UI, not GameController
+- Writeline di UI/display, not GameController ✅
 - enums terpisah ✅
 - Func dihapus, Action only
 - UI dibikin class/display ✅ di inject dari GC;

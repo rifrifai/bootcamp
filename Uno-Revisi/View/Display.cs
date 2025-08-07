@@ -263,7 +263,7 @@ public class Display
     Console.Write($"🏷️  Masukkan nama pemain {playerNumber}: ");
     ResetConsoleColor();
     string? input = Console.ReadLine();
-    string name = string.IsNullOrWhiteSpace(input) ? $"Pemain {playerNumber}" : input;
+    string name = string.IsNullOrWhiteSpace(input) ? $"Pemain {playerNumber + 1}" : input;
     return name;
   }
 

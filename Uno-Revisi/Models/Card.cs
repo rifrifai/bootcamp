@@ -58,17 +58,6 @@ public class Card : ICard
       _ => "⚫"
     };
   }
-  // private string GetColorEmoji(Color color)
-  //     {
-  //         return color switch
-  //         {
-  //             Color.Red => "🔴",
-  //             Color.Blue => "🔵",
-  //             Color.Green => "🟢",
-  //             Color.Yellow => "🟡",
-  //             _ => "⚫"
-  //         };
-  //     }
 
   private string GetActionEmoji(ActionType? action)
   {
