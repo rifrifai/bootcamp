@@ -1,10 +1,42 @@
+using UnoRevisi.Controller;
 using UnoRevisi.Enums;
 using UnoRevisi.Interfaces;
+using UnoRevisi.Models;
 
 namespace UnoRevisi.View;
 
 public class Display
 {
+  private GameController? _gameController = null;
+  private List<IPlayer> _players = new List<IPlayer>();
+
+  public bool SetupAndStartNewGame()
+  {
+    _players = SetupPlayers()
+
+    _gameController = new GameController(_players);
+
+    SetupEventHandlers();
+
+    ShowWelcome();
+
+    return StartGame();
+  }
+
+  private List<IPlayer> SetupPlayers()
+  {
+    int numPlayers = GetPlayerCount();
+    List<IPlayer> players = new List<IPlayer>();
+
+    for (int i = 1; i < numPlayers; i++)
+    {
+      string name = GetPlayerName(i);
+      players.Add(new Player(name));
+    }
+
+    return players;
+  }
+
   public void ShowWelcome()
   {
     Console.Clear();
@@ -14,6 +46,126 @@ public class Display
     Console.WriteLine("🎮" + new string('=', 40) + "🎮");
     ResetConsoleColor();
     Console.WriteLine();
+    // _gameController.StartGame();
+  }
+
+  public bool StartGame()
+  {
+    if (_gameController == null) return false;
+
+    bool started = _gameController.StartGame();
+
+    if (started)
+    {
+      var firstCard = _gameController.GetFirstCard();
+      Color? wildColor = null;
+
+      if (firstCard.GetCardType() == CardType.Wild)
+      {
+        wildColor = _gameController.ChooseWildColor();
+        _gameController.SetCurrentWildColor(wildColor);
+      }
+
+      ShowGameStart(firstCard, wildColor);
+    }
+
+    return started;
+  }
+
+  public void ProcessPlayerTurn()
+  {
+    if (_gameController == null) return;
+
+    var currentPlayer = _gameController.GetCurrentPlayer();
+    var topCard = _gameController.GetTopDiscardCard();
+    var playerHand = _gameController.GetPlayerHand(currentPlayer);
+    var playableCard = _gameController.GetPlayableCardsFromPlayer(currentPlayer, topCard!);
+
+    // display current game state
+    ShowGameState(currentPlayer, topCard!, _gameController.GetCurrentWildColor(), playerHand);
+
+    if (playableCard.Count == 0)
+    {
+
+    }
+  }
+
+  public void HandleNoPlayableCards(IPlayer currentPlayer)
+  {
+    if (_gameController == null) return;
+
+    // draw card from deck
+    var drawCard = _gameController.DrawCardFromDeck(currentPlayer);
+    ShowCardDrawn(drawCard);
+
+    // check if drawn card is playable
+    var topCard = _gameController.GetTopDiscardCard();
+    var playableCards = _gameController.GetPlayableCardsFromPlayer(currentPlayer, topCard!);
+
+    if (playableCards.Count == 0)
+    {
+      ShowTurnSkipped();
+      _gameController.NextPlayer();
+    }
+    else
+    {
+      // player can play with new cards
+      var choosenCard = _gameController.ChooseCard(playableCards);
+      if (_gameController.PlayCard(currentPlayer, choosenCard))
+      {
+        // handle wild card color selection here too
+        if (choosenCard.GetCardType() == CardType.Wild)
+        {
+          var wildColor = _gameController.ChooseWildColor();
+          _gameController.SetCurrentWildColor(wildColor);
+          PrintEffect(($"🎨  wild card choosen: {wildColor}", _gameController.GetColorFromEnum(wildColor)));
+        }
+
+        if (_gameController.GetPlayerHandSize(currentPlayer) == 1)
+        {
+          HandleUnoCall(currentPlayer);
+        }
+
+        var cardEffect = _gameController.ExecuteCardEffect(choosenCard);
+        if (cardEffect.HasValue)
+        {
+          PrintEffect(cardEffect.Value);
+        }
+
+        if (choosenCard.GetCardType() == CardType.Number || (choosenCard.GetCardType() == CardType.Wild && choosenCard.GetWildType() == WildType.Wild))
+        {
+          _gameController.NextPlayer();
+        }
+      }
+
+      if (_gameController.GetPlayerHandSize(currentPlayer) == 1)
+      {
+        HandleUnoCall(currentPlayer);
+      }
+    }
+  }
+
+  public void HandleUnoCall(IPlayer player)
+  {
+    if (_gameController == null) return;
+
+    var callUno = CheckUnoCall(player);
+    if (!callUno)
+    {
+      ShowUnoViolation(player);
+      _gameController.PenalizePlayer(player);
+    }
+    else
+    {
+      ShowUnoCall(player);
+    }
+  }
+
+  public void ShowTurnSkipped()
+  {
+    SetConsoleColor(ConsoleColor.Yellow);
+    Console.WriteLine("⏭️  Masih tidak ada kartu yang bisa dimainkan. Giliran dilewati.");
+    ResetConsoleColor();
   }
 
   public void ShowInsufficientPlayers()
@@ -95,13 +247,6 @@ public class Display
     ResetConsoleColor();
   }
 
-  public void ShowTurnSkipped()
-  {
-    SetConsoleColor(ConsoleColor.Yellow);
-    Console.WriteLine("⏭️  Masih tidak ada kartu yang bisa dimainkan. Giliran dilewati.");
-    ResetConsoleColor();
-  }
-
   public void ShowPlayableCards(List<ICard> playableCards)
   {
     SetConsoleColor(ConsoleColor.Yellow);
@@ -170,7 +315,7 @@ public class Display
     ResetConsoleColor();
   }
 
-  public void PrintEffect((string message, ConsoleColor color)? effect)
+  public void PrintEffect((string message, ConsoleColor color)? effect) //cant have 2 overloads
   {
     if (effect is null) return;
 
@@ -318,6 +463,22 @@ public class Display
       Color.Green => ConsoleColor.Green,
       Color.Yellow => ConsoleColor.Yellow,
       _ => ConsoleColor.White
+    };
+  }
+
+  // static void SetupEventHandlers()
+  public void SetupEventHandlers()
+  {
+    if (_gameController == null) return;
+
+    _gameController.OnPlayerTurnChanged += (player) =>
+    {
+      ShowPlayerTurnWait(player);
+    };
+
+    _gameController.OnCardPlayed += (player, card) =>
+    {
+      ShowCardPlayed(player, card);
     };
   }
 

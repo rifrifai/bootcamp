@@ -15,23 +15,22 @@ public class GameController
   private bool _isClockwise;
   private Color? _currentWildColor;
   private Random _random;
-  private Display _display;
+  // private Display _display;
 
   public Action<IPlayer>? OnPlayerTurnChanged;
   public Action<IPlayer, ICard>? OnCardPlayed;
   public Action<IPlayer>? OnUnoViolation;
   public Action<IPlayer>? OnGameEnded;
 
-  public GameController(List<IPlayer> players, Display display)
+  public GameController(List<IPlayer> players, DiscardPile discardPile, Deck deck)
   {
     _players = players;
     _playerHands = new Dictionary<IPlayer, List<ICard>>();
-    _deck = new Deck();
-    _discardPile = new DiscardPile();
+    _deck = deck;
+    _discardPile = discardPile;
     _currentPlayerIndex = 0;
     _isClockwise = true;
     _random = new Random();
-    _display = display;
   }
 
   public bool StartGame()
@@ -181,6 +180,13 @@ public class GameController
     }
   }
 
+  public ICard GetFirstCard()
+  {
+    var cards = _discardPile.GetCards();
+    var result = cards.Count > 0 ? cards.First() : null!;
+    return result;
+  }
+
   public void NextPlayer()
   {
     if (_isClockwise)
@@ -191,6 +197,11 @@ public class GameController
     {
       _currentPlayerIndex = (_currentPlayerIndex - 1 + _players.Count) % _players.Count;
     }
+  }
+
+  public void SetCurrentWildColor(Color? color)
+  {
+    _currentWildColor = color;
   }
 
   public bool IsGameOver()
