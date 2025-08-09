@@ -4,7 +4,9 @@ internal class Program
 {
   static void Main(string[] args)
   {
-    GameManager gm = new GameManager();
+    HumanPlayer humanPlayer = new();
+    ComputerPlayer computerPlayer = new();
+    GameManager gm = new GameManager(humanPlayer, computerPlayer);
 
     do
     {
@@ -23,7 +25,7 @@ internal class Program
         Console.WriteLine("It\'s a draw!");
       }
 
-      Console.Write("Play Again (Y/N)?");
+      Console.Write("Play Again (Y/N)? ");
     } while (Console.ReadLine()!.ToUpper() == "Y");
   }
 }

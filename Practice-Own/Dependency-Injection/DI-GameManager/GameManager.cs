@@ -2,41 +2,54 @@ namespace DI_GameManager;
 
 public class GameManager
 {
-  Random _rng = new();
-
+  // with ID
+  private IPlayer _player1;
+  private IPlayer _player2;
+  public GameManager(IPlayer player1, IPlayer player2)
+  {
+    _player1 = player1;
+    _player2 = player2;
+  }
   public RoundResult PlayGround()
   {
+    // withoud DI
     // player 1 human
-    Choice p1;
-    do
-    {
-      Console.WriteLine("Enter Choice: (R)ock, (P)aper, or (S)cissors: ");
-      string input = Console.ReadLine()!.ToUpper();
-      if (input == "R")
-      {
-        p1 = Choice.Rock;
-        break;
-      }
-      else if (input == "P")
-      {
-        p1 = Choice.Paper;
-        break;
-      }
-      else if (input == "S")
-      {
-        p1 = Choice.Scissors;
-        break;
-      }
-      else
-      {
-        Console.WriteLine("Invalid choice, try again!");
-      }
-    } while (true);
+    // Choice p1;
+    // do
+    // {
+    //   Console.WriteLine("Enter Choice: (R)ock, (P)aper, or (S)cissors: ");
+    //   string input = Console.ReadLine()!.ToUpper();
+    //   if (input == "R")
+    //   {
+    //     p1 = Choice.Rock;
+    //     break;
+    //   }
+    //   else if (input == "P")
+    //   {
+    //     p1 = Choice.Paper;
+    //     break;
+    //   }
+    //   else if (input == "S")
+    //   {
+    //     p1 = Choice.Scissors;
+    //     break;
+    //   }
+    //   else
+    //   {
+    //     Console.WriteLine("Invalid choice, try again!");
+    //   }
+    // } while (true);
 
     // player 2 computer
-    Choice p2 = (Choice)_rng.Next(0, 3);
-    Console.WriteLine($"Player 2 picked {p2.ToString()}");
+    // Choice p2 = (Choice)_rng.Next(0, 3);
+    // Console.WriteLine($"Player 2 picked {p2.ToString()}");
 
+
+    // widh DI
+    Choice p1 = _player1.GetChoice();
+    Choice p2 = _player2.GetChoice();
+
+    Console.WriteLine($"Player 1 picked {p1.ToString()} and Player 2 picked {p2.ToString()}");
     if (p1 == p2)
     {
       return RoundResult.Draw;
