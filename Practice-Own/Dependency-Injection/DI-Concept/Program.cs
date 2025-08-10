@@ -1,116 +1,55 @@
-﻿namespace DependencyInjectionConcept;
-
-public interface IToolUser
+﻿// interface and implementation
+public interface ICoffeeMaker
 {
-  void SetHammer(Hammer hammer);
-  void SetSaw(Saw saw);
-  void SetElectricalDrill(ElectricDrill electricDrill);
+  void Brew();
 }
 
-public class Hammer
+public class Espresso : ICoffeeMaker
 {
-  public void Use()
+  public void Brew()
   {
-    Console.WriteLine("Hammering nails!");
+    Console.WriteLine("Membuat hot espresso...");
   }
 }
 
-public class Saw
+public class Americano : ICoffeeMaker
 {
-  public void Use()
+  public void Brew()
   {
-    Console.WriteLine("Sawing woods!");
+    Console.WriteLine("Membuat kopi americano...");
   }
 }
 
-public class ElectricDrill
+public class MachineCoffee
 {
-  public void Use()
+  private readonly ICoffeeMaker? _coffeeMaker;
+
+  // constructor DI
+  public MachineCoffee(ICoffeeMaker coffeeMaker)
   {
-    Console.WriteLine("Drilling the wall!");
-  }
-}
-
-public class Builder : IToolUser
-{
-  // it's called setter D I.
-  // public Hammer Hammer { get; set; } = new Hammer();
-  // public Saw Saw { get; set; } = new Saw();
-  // public ElectricDrill ElectricDrill { get; set; } = new ElectricDrill();
-
-  // it's called Contructor DI and interface DI
-  private Hammer _hammer = new();
-  private Saw _saw = new();
-  private ElectricDrill _electricDrill = new();
-
-
-  // it's called Contructor DI
-  // public Builder(Hammer hammer, Saw saw, ElectricDrill electricDrill)
-  // {
-  //   _hammer = hammer;
-  //   _saw = saw;
-  //   _electricDrill = electricDrill;
-  // }
-
-  // public Builder()
-  // {
-  // it's called dependencies bellow
-  //   _hammer = new Hammer();
-  //   _saw = new Saw();
-  // }
-
-  public void BuildHouse()
-  {
-    // constructor DI and interface DI
-    _hammer.Use();
-    _saw.Use();
-    _electricDrill.Use();
-
-    // setter DI
-    // Hammer.Use();
-    // Saw.Use();
-    // ElectricDrill.Use();
+    _coffeeMaker = coffeeMaker;
   }
 
-  // they are interface DI below
-  public void SetElectricalDrill(ElectricDrill electricDrill)
+  public void MakeCoffee()
   {
-    _electricDrill = electricDrill;
+    _coffeeMaker!.Brew();
   }
-
-  public void SetHammer(Hammer hammer)
-  {
-    _hammer = hammer;
-  }
-
-  public void SetSaw(Saw saw)
-  {
-    _saw = saw;
-  }
-  // public void SetSaw(Saw saw) => _saw = saw;
 }
 
 
 
-internal class Program
+class Program
 {
   static void Main()
   {
-    Hammer hammer = new();  // create the dependencies outside
-    Saw saw = new();
-    ElectricDrill electricDrill = new();
-    Builder builder = new();
+    Espresso espresso = new();
+    MachineCoffee machineCoffee = new(espresso);
 
-    // interface DI
-    builder.SetHammer(hammer);
-    builder.SetSaw(saw);
-    builder.SetElectricalDrill(electricDrill);
+    machineCoffee.MakeCoffee();
 
-    // setter DI
-    // builder.Hammer = hammer;  // inject dependencies via setter
-    // builder.Saw = saw;
-    // builder.ElectricDrill = electricDrill;
+    Americano americano = new();
+    MachineCoffee machineCoffee2 = new(americano);
 
-    builder.BuildHouse();
+    machineCoffee2.MakeCoffee();
   }
 }
