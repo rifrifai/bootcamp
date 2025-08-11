@@ -1,39 +1,38 @@
 ﻿// interface and implementation
-public interface ICoffeeMaker
+public interface IAnimal
 {
-  void Brew();
+  void MakeNoise();
 }
-
-public class Espresso : ICoffeeMaker
+public class Dog : IAnimal
 {
-  public void Brew()
+  public void MakeNoise()
   {
-    Console.WriteLine("Membuat hot espresso...");
+    Console.WriteLine("Dog Barks!");
   }
 }
 
-public class Americano : ICoffeeMaker
+public class Cat : IAnimal
 {
-  public void Brew()
+  public void MakeNoise()
   {
-    Console.WriteLine("Membuat kopi americano...");
+    Console.WriteLine("Cat meoww!");
   }
 }
 
-public class MachineCoffee
+public class Animal
 {
-  private readonly ICoffeeMaker? _coffeeMaker;
-
+  private IAnimal? _animal;
   // constructor DI
-  public MachineCoffee(ICoffeeMaker coffeeMaker)
+  public Animal(IAnimal animal)
   {
-    _coffeeMaker = coffeeMaker;
+    _animal = animal;
   }
 
-  public void MakeCoffee()
+  public void AnimalNoise()
   {
-    _coffeeMaker!.Brew();
+    _animal!.MakeNoise();
   }
+
 }
 
 
@@ -42,14 +41,23 @@ class Program
 {
   static void Main()
   {
-    Espresso espresso = new();
-    MachineCoffee machineCoffee = new(espresso);
+    Dog dog = new();
+    Animal animal = new(dog);
 
-    machineCoffee.MakeCoffee();
+    Cat cat = new();
+    Animal animal2 = new(cat);
 
-    Americano americano = new();
-    MachineCoffee machineCoffee2 = new(americano);
+    animal.AnimalNoise();
+    animal2.AnimalNoise();
 
-    machineCoffee2.MakeCoffee();
+    // Espresso espresso = new();
+    // MachineCoffee machineCoffee = new(espresso);
+
+    // machineCoffee.MakeCoffee();
+
+    // Americano americano = new();
+    // MachineCoffee machineCoffee2 = new(americano);
+
+    // machineCoffee2.MakeCoffee();
   }
 }
