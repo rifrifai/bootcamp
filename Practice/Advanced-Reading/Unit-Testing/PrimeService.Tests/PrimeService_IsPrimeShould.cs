@@ -19,55 +19,23 @@ using PrimeService;
 
 namespace PrimeService.Tests;
 
-/// <summary>
-/// Test fixture for testing the IsPrime method of PrimeService
-/// 
-/// [TestFixture] tells NUnit that this class contains tests.
-/// We organize tests by the method we're testing to keep things clean.
-/// </summary>
-
 [TestFixture]
 public class PrimeService_IsPrimeShould
 {
-  // this is our "System Under Test" (SUT)
-  // we create a fresh instance of each test to ensure test isolation
   private PrimeService _primeService;
 
-  /// <summary>
-  /// SetUp method runs before each individual test
-  /// This ensures each test starts with a clean state
-  /// Think of it as "preparing the stage" for each test
-  /// </summary>
   [SetUp]
   public void Setup()
   {
-    // create a new instance of each test
-    // this prevents tests from affecting each other
     _primeService = new PrimeService();
   }
 
-  /// <summary>
-  /// TearDown runs after each test (if you need cleanup)
-  /// For this simple example, we don't need it, but it's good to know about
-  /// </summary>
   [TearDown]
   public void TearDown()
   {
-    // In more complex scenarios, you might need to:
-    // - Close database connections
-    // - Delete temporary files
-    // - Reset static state
-    // For our simple service, no cleanup needed
   }
 
   #region Edge Cases and Invalid Inputs
-  /// <summary>
-  /// Test that demonstrate TDD - this will fail initially
-  /// We start with the simplest case: 1 is not prime
-  /// 
-  /// Test naming convention: [MethodName]_[Scenario]_[ExpectedResult]
-  /// This make it crystal clear what we're testing and what we expect
-  /// </summary>
   [Test]
   public void IsPrime_InputIs1_ReturnFalse()
   {
@@ -75,18 +43,12 @@ public class PrimeService_IsPrimeShould
     int input = 1;
 
     // Act: execute the method we're testing
-    // note: this will initially throw NotImplementedException
     var result = _primeService.IsPrime(input);
 
     // Assert: verify the result is what we expect
     Assert.That(result, Is.False, "1 should not be prime by mathematical definition");
   }
 
-  ///<summary>
-  /// Using TestCase attribute to test multiple similiar scenarios
-  /// This is more efficient than writing seperate test for each value
-  /// All values less than 2 should return false
-  ///</summary>
   [TestCase(-1)]
   [TestCase(0)]
   [TestCase(1)]
@@ -99,10 +61,6 @@ public class PrimeService_IsPrimeShould
     Assert.That(result, Is.False, $"{value} should not be prime (values less than 2 are not prime)");
   }
 
-  /// <summary>
-  /// Test with exremely large negative numbers
-  /// Good tests cover edge cases that might break your code
-  /// </summary>
   [Test]
   public void IsPrime_LargeNegativeNumber_ReturnFalse()
   {
@@ -118,10 +76,6 @@ public class PrimeService_IsPrimeShould
 
   #region Known Prime Numbers
 
-  /// <summary>
-  /// Test the smallest prime number
-  /// 2 is the first and only even prime number
-  /// </summary>
   [Test]
   public void IsPrime_InputIs2_ReturnTrue()
   {
@@ -132,10 +86,6 @@ public class PrimeService_IsPrimeShould
     Assert.That(result, Is.True, "2 is the smallest prime number");
   }
 
-  /// <summary>
-  /// Test several known prime numbers using TestCase
-  /// This ensures our algorithm works correctly for various primes
-  /// </summary>
   [TestCase(2)]
   [TestCase(3)]
   [TestCase(5)]
@@ -145,8 +95,8 @@ public class PrimeService_IsPrimeShould
   [TestCase(17)]
   [TestCase(19)]
   [TestCase(23)]
-  [TestCase(97)]  // larger 2 digit prime
-  [TestCase(101)] // 3 digits prime
+  [TestCase(97)]
+  [TestCase(101)]
   public void IsPime_KnownPrimeNumbers_ReturnTrue(int primeNumbers)
   {
     var result = _primeService.IsPrime(primeNumbers);
@@ -156,7 +106,74 @@ public class PrimeService_IsPrimeShould
 
   #endregion
 
+  #region Known Composite Numbers
+  [Test]
+  public void IsPrime_InputIs4_ReturnFalse()
+  {
+    int input = 4;
 
+    var result = _primeService.IsPrime(input);
 
+    Assert.That(result, Is.False, "4 is composite (2 * 2) not prime");
+  }
 
+  [TestCase(4)]
+  [TestCase(6)]
+  [TestCase(8)]
+  [TestCase(9)]
+  [TestCase(12)]
+  [TestCase(14)]
+  [TestCase(15)]
+  [TestCase(21)]
+  [TestCase(25)]
+  [TestCase(100)]
+  public void IsPrime_KnownCompositeNumbers_ReturnFalse(int compositeNumber)
+  {
+    var result = _primeService.IsPrime(compositeNumber);
+
+    Assert.That(result, Is.False, $"{compositeNumber} should be identified as composite (not prime)");
+  }
+
+  #endregion
+
+  #region Performance and Large Numbers
+
+  [TestCase(982451653)]
+  [TestCase(982451654)]
+  public void IsPrime_LargeNumbers_WorksCorrectly(int largeNumbers)
+  {
+    var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+
+    var result = _primeService.IsPrime(largeNumbers);
+
+    stopWatch.Stop();
+
+    if (largeNumbers == 982451653)
+    {
+      Assert.That(result, Is.True, "982451653 should be prime");
+    }
+    else
+    {
+      Assert.That(result, Is.False, "982451654 should be composite");
+    }
+  }
+
+  #endregion
+
+  #region Alternative Assert Syntax Examples
+  [Test]
+  public void IsPrime_DemonstrateAssertSyntax_InputIs3()
+  {
+    var result = _primeService.IsPrime(3);
+
+    // Assert.IsTrue(result, "3 should be prime - Classic syntax");
+
+    Assert.That(result, Is.True, "3 should be prime - Constraint syntax (Newer)");
+
+    Assert.That(result, Is.EqualTo(true), "3 should be prime - Fluent syntax (Most modern)");
+
+    Assert.That(result, "3 should be prime - Simple boolean check");
+  }
+
+  #endregion
 }
