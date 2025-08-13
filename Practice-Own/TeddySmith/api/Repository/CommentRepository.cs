@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Data;
 using api.Interfaces;
 using api.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
@@ -24,16 +25,20 @@ namespace api.Repository
             return commentModel; 
         }
 
-    public Task<bool> DeleteAsync(int id)
-    {
-      throw new NotImplementedException();
-    }
+        public async Task<Comment?> DeleteAsync(int id)
+        {
+            var commentModel = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
+            if (commentModel == null) return null;
+            _context.Comments.Remove(commentModel);
+            await _context.SaveChangesAsync();
+            return commentModel;
+        }
 
-    public async Task<List<Comment>> GetAllAsync()
-            {
-                var result = await _context.Comments.ToListAsync();
-                return result;
-            }
+        public async Task<List<Comment>> GetAllAsync()
+        {
+            var result = await _context.Comments.ToListAsync();
+            return result;
+        }
 
         public async Task<Comment?> GetByIdAsync(int id)
         {
