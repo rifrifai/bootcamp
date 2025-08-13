@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 
 namespace api.Data
 {
@@ -11,7 +12,7 @@ namespace api.Data
     {
         public ApplicationDBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
-
+            Batteries_V2.Init();
         }
 
         public DbSet<Stock> Stocks { get; set; }
