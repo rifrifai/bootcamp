@@ -4,9 +4,38 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Stock;
 using api.Models;
+using AutoMapper;
+using api.Dtos.Comment;
 
 namespace api.Mappers
 {
+
+
+
+    // public class StockMappers : Profile
+    // {
+    //     public StockMappers()
+    //     {
+    //         CreateMap<Stock, StockDto>()
+    //             .ForMember(dest => dest.Symbol, opt => opt.MapFrom(src => src.Symbol))
+    //             .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.CompanyName))
+    //             .ForMember(dest => dest.Purchase, opt => opt.MapFrom(src => src.Purchase))
+    //             .ForMember(dest => dest.LastDiv, opt => opt.MapFrom(src => src.LastDiv))
+    //             .ForMember(dest => dest.Industry, opt => opt.MapFrom(src => src.Industry))
+    //             .ForMember(dest => dest.MarketCap, opt => opt.MapFrom(src => src.MarketCap))
+    //             .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments.Select(c => c.ToCommentDto()).ToList()));
+
+    //         CreateMap<Stock, CreateStockRequestDto>()
+    //             .ForMember(dest => dest.Symbol, opt => opt.MapFrom(src => src.Symbol))
+    //             .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.CompanyName))
+    //             .ForMember(dest => dest.Purchase, opt => opt.MapFrom(src => src.Purchase))
+    //             .ForMember(dest => dest.LastDiv, opt => opt.MapFrom(src => src.LastDiv))
+    //             .ForMember(dest => dest.Industry, opt => opt.MapFrom(src => src.Industry))
+    //             .ForMember(dest => dest.MarketCap, opt => opt.MapFrom(src => src.MarketCap));
+    //     }
+    // }
+
+
     public static class StockMappers
     {
         public static StockDto ToStockDto(this Stock stockModel)
@@ -20,7 +49,7 @@ namespace api.Mappers
                 LastDiv = stockModel.LastDiv,
                 Industry = stockModel.Industry,
                 MarketCap = stockModel.MarketCap,
-                Comments = stockModel.Comments.Select(c => c.ToCommentDto()).ToList()
+                Comments = stockModel?.Comments?.Select(c => c.ToCommentDto()).ToList()
             };
         }
 

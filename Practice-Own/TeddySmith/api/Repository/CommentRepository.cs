@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
 {
+    // repository for database call
     public class CommentRepository : ICommentRepository
     {
         private readonly ApplicationDBContext _context;
@@ -22,27 +23,34 @@ namespace api.Repository
         {
             await _context.Comments.AddAsync(commentModel);
             await _context.SaveChangesAsync();
-            return commentModel; 
+            return commentModel;
         }
 
         public async Task<Comment?> DeleteAsync(int id)
         {
-            var commentModel = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
-            if (commentModel == null) return null;
-            _context.Comments.Remove(commentModel);
+            var existingComment = await _context.Comments.FindAsync(id);
+            if (existingComment == null) return null;
+
+            existingComment.IsDeleted = true;
             await _context.SaveChangesAsync();
-            return commentModel;
+            return existingComment;
+
+            // var commentModel = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
+            // if (commentModel == null) return null;
+            // _context.Comments.Remove(commentModel);
+            // await _context.SaveChangesAsync();
+            // return commentModel;
         }
 
         public async Task<List<Comment>> GetAllAsync()
         {
-            var result = await _context.Comments.ToListAsync();
+            var result = await _context.Comments.Where(c => c.IsDeleted == false).ToListAsync();
             return result;
         }
 
         public async Task<Comment?> GetByIdAsync(int id)
         {
-            var result = await _context.Comments.FindAsync(id);
+            var result = await _context.Comments.Where(e => e.IsDeleted == false).FirstOrDefaultAsync(c => c.Id == id);
             return result;
         }
 

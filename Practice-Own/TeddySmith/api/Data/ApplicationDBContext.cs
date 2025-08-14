@@ -14,7 +14,7 @@ namespace api.Data
     {
         public ApplicationDBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
-            // Batteries_V2.Init();
+            Batteries_V2.Init();
         }
 
         public DbSet<Stock> Stocks { get; set; }
@@ -23,19 +23,39 @@ namespace api.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            // List<IdentityRole> roles = new List<IdentityRole>
+            // {
+            //     new IdentityRole {
+            //         Name = "Admin",
+            //         NormalizedName = "ADMIN"
+            //     },
+            //     new IdentityRole {
+            //         Name = "User",
+            //         NormalizedName = "USER"
+            //     },
+            // };
+            // builder.Entity<IdentityRole>().HasData(roles);
+            SeedData(builder);
+        }
 
-            List<IdentityRole> roles = new List<IdentityRole>
-            {
-                new IdentityRole {
+        private void SeedData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole
+                {
+                    Id = "a1b2c3d4-e5f6-7890-abcd-123456789abc",
                     Name = "Admin",
-                    NormalizedName = "ADMIN"
+                    NormalizedName = "ADMIN",
+                    ConcurrencyStamp = "role-admin-stamp"
                 },
-                new IdentityRole {
+                new IdentityRole
+                {
+                    Id = "b2c3d4e5-f6g7-8901-bcde-234567890def",
                     Name = "User",
-                    NormalizedName = "USER"
-                },
-            };
-            builder.Entity<IdentityRole>().HasData(roles);
+                    NormalizedName = "USER",
+                    ConcurrencyStamp = "role-user-stamp"
+                }
+            );
         }
     }
 }

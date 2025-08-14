@@ -10,10 +10,10 @@ namespace api.Dtos.Stock
     {
         [Required]
         [MaxLength(6, ErrorMessage = "Symbol cannot exceed 6 characters.")]
-        public string Symbol { get; set; } = string.Empty;
+        public string? Symbol { get; set; }
         [Required]
-        [MaxLength(12, ErrorMessage = "Company Name cannot exceed 12 characters.")]
-        public string CompanyName { get; set; } = string.Empty;
+        [MaxLength(30, ErrorMessage = "Company Name cannot exceed 30 characters.")]
+        public string? CompanyName { get; set; }
          [Required]
         [Range(1, 1000000000)]
         public decimal Purchase { get; set; }
@@ -22,7 +22,7 @@ namespace api.Dtos.Stock
         public decimal LastDiv { get; set; }
         [Required]
         [MaxLength(20, ErrorMessage = "Industry cannot exceed 20 characters.")]
-        public string Industry { get; set; } = string.Empty;
+        public string? Industry { get; set; }
         [Range(1, 50000000000, ErrorMessage = "Market Cap must be between 1 and 50 billion.")]
         public long MarketCap { get; set; }
     }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace api.Dtos.account
+namespace api.Dtos.Account
 {
     public class RegisterDto
     {
