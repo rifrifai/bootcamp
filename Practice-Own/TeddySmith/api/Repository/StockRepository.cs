@@ -28,13 +28,13 @@ namespace api.Repository
 
         public async Task<List<Stock>> GetAllAsync()
         {
-            var result = await _context.Stocks.Include(c => c.Comments).ToListAsync();
+            var result = await _context.Stocks.Where(e => e.IsDeleted == false).Include(c => c.Comments).ToListAsync();
             return result;
         }
 
         public async Task<Stock?> GetByIdAync(int id)
         {
-            var stockModel = await _context.Stocks.Include(c => c.Comments).FirstOrDefaultAsync(i => i.Id == id);
+            var stockModel = await _context.Stocks.Where(e => e.IsDeleted == false).Include(c => c.Comments).FirstOrDefaultAsync(i => i.Id == id);
             return stockModel;
         }
 
@@ -60,7 +60,8 @@ namespace api.Repository
             var stockModel = _context.Stocks.FirstOrDefault(x => x.Id == id);
             if (stockModel == null) return null;
 
-            _context.Stocks.Remove(stockModel);
+            // _context.Stocks.Remove(stockModel);
+            stockModel.IsDeleted = true; // Soft delete
             await _context.SaveChangesAsync();
             return stockModel;
         }
