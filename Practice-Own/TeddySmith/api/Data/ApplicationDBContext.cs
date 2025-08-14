@@ -14,7 +14,7 @@ namespace api.Data
     {
         public ApplicationDBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
-            Batteries_V2.Init();
+            // Batteries_V2.Init();
         }
 
         public DbSet<Stock> Stocks { get; set; }

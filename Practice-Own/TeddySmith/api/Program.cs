@@ -41,6 +41,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme =
     options.DefaultChallengeScheme =
     options.DefaultForbidScheme =
+    options.DefaultScheme = 
     options.DefaultSignInScheme =
     options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;  
 }).AddJwtBearer(options => {
@@ -50,7 +51,6 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["JWT:Issuer"],
         ValidateAudience = true,
         ValidAudience = builder.Configuration["JWT:Audience"],
-        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]!))
     };
