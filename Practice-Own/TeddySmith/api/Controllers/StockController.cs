@@ -25,12 +25,13 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var stocks = await _stockRepo.GetAllAsync();
-            
+
             var stockDto = stocks.Select(s => s.ToStockDto());
 
             return Ok(stocks);
