@@ -1,75 +1,102 @@
-﻿public interface ITransportation
+﻿public interface IProduct
 {
-    void Deliver(string destination);
+    public string Name { get; }
+    string Use();
 }
-public class Truck : ITransportation
+public class ConcreteProductA : IProduct
 {
-    public void Deliver(string destination)
-    {
-        Console.WriteLine($"🚚 Delivering by truck to {destination}");
-    }
-}
-public class Ship : ITransportation
-{
-    public void Deliver(string destination)
-    {
-        Console.WriteLine($"🚢 Delivering by ship to {destination}");
-    }
-}
-public class Airplane : ITransportation
-{
-    public void Deliver(string destination)
-    {
-        Console.WriteLine($"✈️  Delivering by airplane to {destination}");
-    }
-}
-public abstract class LogisticsFactory
-{
-    public abstract ITransportation CreateTransport();
+    public string Name => "Concrete Product A";
 
-    public void PlanDelivery(string destination)
-    {
-        var transport = CreateTransport();
+    public string Use() => "Memproses data dengan Algoritma A";
+}
+public class ConcreteProductB : IProduct
+{
+    public string Name => "Concrete Product B";
 
-        Console.WriteLine("📦 Planning delivery...");
-        transport.Deliver(destination);
-    }
+    public string Use() => "Memproses data dengan Algoritma B";
 }
-public class TruckFactory : LogisticsFactory
+public class ConcreteProductC : IProduct
 {
-    public override ITransportation CreateTransport()
-    {
-        return new Truck();
-    }
+    public string Name => "Concrete Product C";
+
+    public string Use() => "Memproses data dengan Algoritma C";
 }
-public class shipFactory : LogisticsFactory
+public class ConcreteProductD : IProduct
 {
-    public override ITransportation CreateTransport()
+    public string Name => "Concrete Product D";
+    public string Use() => "Memproses data dengan Algoritma D";
+}
+
+
+public abstract class Creator
+{
+    public abstract IProduct CreateProduct();
+    public string DoWork()
     {
-        return new Ship();
+        IProduct product = CreateProduct();
+        var result = product.Use();
+        return $"[{product.Name}, {result}]";
     }
 }
-public class airplaneFactory : LogisticsFactory {
-    public override ITransportation CreateTransport()
-    {
-        return new Airplane();
-    }
+public sealed class ConcreteCreatorA : Creator
+{
+    public override IProduct CreateProduct() => new ConcreteProductA();
+}
+public sealed class ConcreteCreatorB : Creator
+{
+    public override IProduct CreateProduct() => new ConcreteProductB();
+}
+public sealed class ConcreteCreatorC : Creator
+{
+    public override IProduct CreateProduct() => new ConcreteProductC();
+}
+public sealed class ConcreteCreatorD : Creator
+{
+    public override IProduct CreateProduct() => new ConcreteProductD();
 }
 
 class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        Console.WriteLine("=== AFTER: With Factory Method Pattern ===");
+        // Creator creatorA = new ConcreteCreatorA();
+        // creatorA.DoWork();
 
-        var truckFactory = new TruckFactory();
-        truckFactory.PlanDelivery("Bandung");
+        // Creator creatorB = new ConcreteCreatorB();
+        // creatorB.DoWork();
 
-        var shipFactory = new shipFactory();
-        shipFactory.PlanDelivery("Aceh");
+        // Creator creatorC = new ConcreteCreatorC();
+        // creatorC.DoWork();
 
-        var airplaneFactory = new airplaneFactory();
-        airplaneFactory.PlanDelivery("Tokyo");
 
+        // Contoh pemilihan creator runtime dari argumen/konfigurasi
+        // Jalankan: dotnet run A  (atau B/C)
+        // var code = (args.Length > 0 ? args[0] : "A").ToUpperInvariant();
+
+        // Creator creator = code switch
+        // {
+        //     "A" => new ConcreteCreatorA(),
+        //     "B" => new ConcreteCreatorB(),
+        //     "C" => new ConcreteCreatorC(),
+        //     _ => new ConcreteCreatorA()
+        // };
+
+        // var output = creator.DoWork();
+        // Console.WriteLine(output);
+
+
+        // Jalankan semua creator
+        Creator[] creators = [
+            new ConcreteCreatorA(),
+            new ConcreteCreatorB(),
+            new ConcreteCreatorC(),
+            new ConcreteCreatorD()
+        ];
+
+        foreach (var creator in creators)
+        {
+            string result = creator.DoWork();
+            Console.WriteLine(result);
+        }
     }
 }
