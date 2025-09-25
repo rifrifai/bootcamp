@@ -14,7 +14,7 @@ namespace api.Dtos.Stock
         [Required]
         [MaxLength(30, ErrorMessage = "Company Name cannot exceed 30 characters.")]
         public string? CompanyName { get; set; }
-         [Required]
+        [Required]
         [Range(1, 1000000000)]
         public decimal Purchase { get; set; }
         [Required]
