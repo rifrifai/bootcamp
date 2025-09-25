@@ -39,6 +39,14 @@ namespace api.Repository
             {
                 filter = filter.Where(stock => stock.Symbol.Contains(query.Symbol));
             }
+
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+                {
+                    filter = query.IsDecending ? filter.OrderByDescending(s => s.Symbol) : filter.OrderBy(s => s.Symbol);
+                }
+            }
             return await filter.ToListAsync();
         }
 
