@@ -69,8 +69,6 @@ namespace api.Controllers
 
                     if (roleResult.Succeeded)
                     {
-                        // var youtuber = await _youtuberService.CreateYoutuberAsync(youtuberCreateDTO);
-                        // return CreatedAtAction(nameof(GetYoutuber), new { id = youtuber.Id }, youtuber);
                         var result = new NewUserDto
                         {
                             Username = appUser.UserName,

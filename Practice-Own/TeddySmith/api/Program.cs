@@ -17,62 +17,32 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-// builder.Services.AddSwaggerGen(option =>
-// {
-//     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
-//     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-//     {
-//         In = ParameterLocation.Header,
-//         Description = "Please enter a valid token",
-//         Name = "Authorization",
-//         Type = SecuritySchemeType.Http,
-//         BearerFormat = "JWT",
-//         Scheme = "Bearer"
-//     });
-//     option.AddSecurityRequirement(new OpenApiSecurityRequirement
-//     {
-//         {
-//             new OpenApiSecurityScheme
-//             {
-//                 Reference = new OpenApiReference
-//                 {
-//                     Type=ReferenceType.SecurityScheme,
-//                     Id="Bearer"
-//                 }
-//             },
-//             new string[]{}
-//         }
-//     });
-// });
-
 builder.Services.AddSwaggerGen(setup =>
+{
+    // Include 'SecurityScheme' to use JWT Authentication
+    var jwtSecurityScheme = new OpenApiSecurityScheme
     {
-        // Include 'SecurityScheme' to use JWT Authentication
-        var jwtSecurityScheme = new OpenApiSecurityScheme
+        BearerFormat = "JWT",
+        Name = "JWT Authentication",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        Description = "Put *ONLY* your JWT Bearer token on textbox below!",
+
+        Reference = new OpenApiReference
         {
-            BearerFormat = "JWT",
-            Name = "JWT Authentication",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.Http,
-            Scheme = JwtBearerDefaults.AuthenticationScheme,
-            Description = "Put *ONLY* your JWT Bearer token on textbox below!",
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
 
-            Reference = new OpenApiReference
-            {
-                Id = JwtBearerDefaults.AuthenticationScheme,
-                Type = ReferenceType.SecurityScheme
-            }
-        };
+    setup.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
 
-        setup.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
-
-        setup.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            { jwtSecurityScheme, Array.Empty<string>() }
-        });
-
+    setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtSecurityScheme, Array.Empty<string>() }
     });
+});
 
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -129,10 +99,19 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
 
         // Biar semua section (request/response) terbuka otomatis
-        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.Full);
+        // c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.Full);
 
-        // Biar request body tidak auto-hide setelah execute
+        // Biar semua section (request/response) TIDAK terbuka otomatis
+        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
+
+        // (Opsional) Biar request body tidak auto-hide setelah execute
         c.DefaultModelsExpandDepth(-1); // -1 = sembunyikan schema models
+
+        // (Opsional) Pastikan detail model per operation tetap collapse
+        c.DefaultModelExpandDepth(0);
+
+        // (Opsional) Hindari auto-expand karena deep link
+        c.EnableDeepLinking();
     });
     // app.MapOpenApi();
 }
