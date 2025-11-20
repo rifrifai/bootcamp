@@ -15,14 +15,14 @@ class Program
         {
             for (int i = 1; i <= answer; i++)
             {
-            string hasil = (i % 3 == 0 ? "foo" : "") +
-                (i % 5 == 0 ? "bar" : "") +
-                (i % 7 == 0 ? "jazz" : "") +
-                (i % 4 == 0 ? "baz" : "") +
-                (i % 9 == 0 ? "huzz" : "");
+                string hasil = (i % 3 == 0 ? "foo" : "") +
+                    (i % 5 == 0 ? "bar" : "") +
+                    (i % 7 == 0 ? "jazz" : "") +
+                    (i % 4 == 0 ? "baz" : "") +
+                    (i % 9 == 0 ? "huzz" : "");
 
-            Console.Write(string.IsNullOrEmpty(hasil) ? i.ToString() : hasil);
-            if (i < answer) Console.Write(", ");
+                Console.Write(string.IsNullOrEmpty(hasil) ? i.ToString() : hasil);
+                if (i < answer) Console.Write(", ");
             }
         }
         else
